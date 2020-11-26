@@ -1,0 +1,22 @@
+{
+  "name": "swagger-api",
+  "version": "1.0.0",
+  "license": "Unlicense",
+  "dependencies": {
+    "axios": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.2",
+    "typescript": "^3.6.4",
+    "@openapitools/openapi-generator-cli": "1.0.1-4.1.3",
+    "@stoplight/prism-cli": "^3.0.1"
+  },
+  "scripts": {
+    "generateAPI": "openapi-generator generate -g typescript-axios -i api.json -o api",
+    "generateAPIProd": "npm run-script generateAPI && powershell ./change-base-path.ps1",
+    "build": "tsc --outDir dist/",
+    "openapi-mock": "prism mock -m -d api.json"
+  },
+  "main": "./dist/api/index.js",
+  "typings": "./dist/api/index.d.ts"
+}

@@ -1,0 +1,10 @@
+node_modules
+api/*
+dist/*
+
+#swagger generated code
+api.json
+
+#locks
+yarn.lock
+package-lock.json
