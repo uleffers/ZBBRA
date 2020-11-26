@@ -107,6 +107,7 @@
 
     <ItemGroup>
       <TypeScriptCompile Include="ClientApp\src\components\budget\budgetPage.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\common\form\FormikalizedNumberInput.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\footer\Footer.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\logoBar\LogoBar.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\navigation\NavigationBar.tsx" />
@@ -125,6 +126,7 @@
       <TypeScriptCompile Include="ClientApp\src\stores\TransactionStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\Texts\index.ts" />
       <TypeScriptCompile Include="ClientApp\src\Utils\formatDate.ts" />
+      <TypeScriptCompile Include="ClientApp\src\Utils\MonthMapper.ts" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

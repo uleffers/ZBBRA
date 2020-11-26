@@ -15,11 +15,28 @@ const transactionPage = {
     note: "Note",
     category: "Category",
     account: "Account",
+    title: "Transactions",
+}
+
+const months = {
+    jan: "Jan",
+    feb: "Feb",
+    mar: "Mar",
+    apr: "Apr",
+    may: "May",
+    jun: "Jun",
+    jul: "Jul",
+    aug: "Aug",
+    sep: "Sep",
+    oct: "Oct",
+    nov: "Nov",
+    dec: "Dec",
 }
 
 const dk = {
     footer,
     header,
     transactionPage,
+    months
 }
 export default dk;

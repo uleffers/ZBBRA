@@ -3,7 +3,7 @@
     "less-plugin-variables-output": "attilah/less-plugin-variables-output#calllback"
   },
   "dependencies": {
-    mobx": "^5.15.4",
+    "mobx": "^5.15.4",
     "mobx-react-lite": "^1.5.2"
   }
 }

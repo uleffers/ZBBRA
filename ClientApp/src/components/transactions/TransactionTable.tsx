@@ -27,6 +27,9 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             title: texts.amount,
             dataIndex: 'transactionAmount',
             key: 'amount' + tableName,
+            render: (amount: Number) => {
+                return amount.toFixed(2).toString() + " kr."
+            }
         },
         {
             title: texts.category,
