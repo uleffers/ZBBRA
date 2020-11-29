@@ -29,7 +29,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             render: (date: Date ) => { 
                 return formatDate(new Date(date.toString() ?? '')); 
             },
-            Editable: false,
+            Editable: true,
         },
         {
             title: texts.amount,
@@ -38,7 +38,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             render: (amount: Number) => {
                 return amount.toFixed(2).toString() + " kr."
             },
-            Editable: false,
+            Editable: true,
         },
         {
             title: texts.category,
@@ -65,8 +65,9 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             Editable: true,
         },
         {
-            title: '',
+            title: 'Edit',
             dataIndex: 'operation',
+            width: 50,
             render: (unUsed: any, record: any) => {
                 const editable = props.isEditing(record.transactionId);
                 return editable ? (
@@ -98,11 +99,36 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             return col;
         }
         
+        let inputType: string;
+        let tableName = '-transactionTable';
+        switch(col.key){
+            case 'date' + tableName:
+            {
+                inputType = 'text';
+                break;
+            }
+            case 'amount' + tableName:
+            {
+                inputType = 'number';
+                break;
+            }
+            case 'note' + tableName:
+            {
+                inputType = 'text';
+                break;
+            }
+            default:
+            {
+                inputType = 'text';
+                break;
+            }
+        }
+        
         return {
             ...col,
             onCell: (record: TransactionDTO) => ({
                 record,
-                inputType: 'text',
+                inputType: inputType,
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: props.isEditing(record.transactionId),

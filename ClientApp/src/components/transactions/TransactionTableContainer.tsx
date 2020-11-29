@@ -6,6 +6,7 @@ import TransactionTable from "./TransactionTable";
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
 import {Col, Form, InputNumber, Row, Select} from "antd";
 import {TransactionDTO} from "swagger-api/dist/api/api";
+import formatDate from "../../Utils/formatDate";
 
 export const TransactionTableContainer: React.FC = observer(() => {
 
@@ -55,6 +56,8 @@ export const TransactionTableContainer: React.FC = observer(() => {
             accountId: '',
             ...record,
         });
+        
+        form.setFieldsValue({transactionDate: formatDate(new Date(record.transactionDate?.toString() ?? ''))})
         setEditingKey(record.transactionId ?? '');
     };
 
@@ -71,10 +74,21 @@ export const TransactionTableContainer: React.FC = observer(() => {
             let currentItem = store.payload.find((transaction) => transaction.transactionId == e.transactionId);
             
             if (currentItem){
-                console.log("setting note");
-                console.log(form.getFieldValue('transactionNote'))
-                currentItem.transactionNote = form.getFieldValue('transactionNote');
-                await store.updateTransaction(e);
+                let dateString = form.getFieldValue('transactionDate');
+                let date = dateString.split('-');
+                console.log(date.map((x: string) => parseInt(x)));
+
+                const returnTransaction: TransactionDTO = {
+                    transactionId: currentItem.transactionId,
+                    budgetCategoryId: currentItem.budgetCategoryId,
+                    accountId: currentItem.accountId,
+                    transactionNote: form.getFieldValue('transactionNote'),
+                    transactionAmount: form.getFieldValue('transactionAmount'),
+                    transactionDate: new Date(Date.UTC(parseInt(date[2]) , parseInt(date[1]) - 1, parseInt(date[0])))
+                };
+                
+                console.log(returnTransaction.transactionDate);
+                await store.updateTransaction(returnTransaction);
             }
             setEditingKey('');
             updateTransactionTable();
