@@ -4,3 +4,5 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 *.xml
+node_modules/mobx
+node_modules

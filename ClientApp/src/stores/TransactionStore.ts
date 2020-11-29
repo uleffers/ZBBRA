@@ -20,9 +20,15 @@ export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
         const promise = this.transactionApi.apiTransactionsGettransactionsinmonthGet(month, year, undefined);
         this.callPromise(promise, false);
     }
+    
+    updateTransaction = (transactionDTO: TransactionDTO) => {
+        const promise = this.transactionApi.apiTransactionsUpdatePatch(transactionDTO, undefined);
+        this.callPromise(promise, false);
+    }
 }
 
 decorate(TransactionStore, {
     getTransactionsInInterval: action,
-    getTransactionsInMonth: action
+    getTransactionsInMonth: action,
+    updateTransaction: action,
 });

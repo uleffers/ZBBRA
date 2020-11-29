@@ -46,7 +46,7 @@ const App = () => {
                         </Col>
                     </Row>
                 </Header>
-                <Layout style={{ height: "100vh"}}>
+                <Layout >
                         <Content style={{ margin: "16px 16px", background: "#fff" }}>
                             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
                                 <Switch>

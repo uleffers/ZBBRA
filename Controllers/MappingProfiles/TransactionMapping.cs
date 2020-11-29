@@ -23,6 +23,15 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategoryId))
                 .ForMember(des => des.AccountId, act => act.MapFrom(src => src.AccountId))
                 .ForAllOtherMembers(act => act.Ignore());
+            
+            CreateMap<TransactionDTO, Transaction>()
+                .ForMember(des => des.TransactionId, act => act.MapFrom(src => src.TransactionId))
+                .ForMember(des => des.TransactionDate, act => act.MapFrom(src => src.TransactionDate))
+                .ForMember(des => des.TransactionAmount, act => act.MapFrom(src => src.TransactionAmount))
+                .ForMember(des => des.TransactionNote, act => act.MapFrom(src => src.TransactionNote))
+                .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategoryId))
+                .ForMember(des => des.AccountId, act => act.MapFrom(src => src.AccountId))
+                .ForAllOtherMembers(act => act.Ignore());
         }
     }
 }

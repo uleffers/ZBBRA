@@ -103,10 +103,12 @@
 
     <ItemGroup>
       <Folder Include="Business\Models" />
+      <Folder Include="ClientApp\src\Common" />
     </ItemGroup>
 
     <ItemGroup>
       <TypeScriptCompile Include="ClientApp\src\components\budget\budgetPage.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\common\EditableCell.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\form\FormikalizedNumberInput.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\footer\Footer.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\logoBar\LogoBar.tsx" />

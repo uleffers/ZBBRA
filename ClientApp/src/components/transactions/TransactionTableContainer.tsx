@@ -4,12 +4,18 @@ import {TransactionStore} from "../../stores/TransactionStore";
 import {useStore} from "../../Hooks/stores";
 import TransactionTable from "./TransactionTable";
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
-import {Col, InputNumber, Row, Select} from "antd";
+import {Col, Form, InputNumber, Row, Select} from "antd";
+import {TransactionDTO} from "swagger-api/dist/api/api";
 
 export const TransactionTableContainer: React.FC = observer(() => {
 
+    const [form] = Form.useForm();
+    const [editingKey, setEditingKey] = useState('');
+    
     const [monthState, setMonthState] = useState(0);
     const [yearState, setYearState] = useState(0);
+    
+    
 
     const store: TransactionStore = useStore(TransactionStore);
     const { Option } = Select;
@@ -34,6 +40,50 @@ export const TransactionTableContainer: React.FC = observer(() => {
             store.getTransactionsInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, e);
         }
     }
+
+    const isEditing = (transactionId?: string) => transactionId === editingKey;
+
+    const updateTransactionTable = () =>  {
+        store.getTransactionsInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, yearState === 0 ? new Date().getFullYear() : yearState);
+    }
+    const onEdit = (record: TransactionDTO) => {
+        form.setFieldsValue({
+            transactionDate: '',
+            transactionAmount: '',
+            transactionNote: '',
+            budgetCategoryId: '',
+            accountId: '',
+            ...record,
+        });
+        setEditingKey(record.transactionId ?? '');
+    };
+
+    const onCancelEdit = () => {
+        console.log("onCancelEdit")
+        setEditingKey('');
+    };
+    
+    const onEditSave = async (e: TransactionDTO) => {
+        console.log("onEditSave")
+        try {
+            const row = await form.validateFields();
+            
+            let currentItem = store.payload.find((transaction) => transaction.transactionId == e.transactionId);
+            
+            if (currentItem){
+                console.log("setting note");
+                console.log(form.getFieldValue('transactionNote'))
+                currentItem.transactionNote = form.getFieldValue('transactionNote');
+                await store.updateTransaction(e);
+            }
+            setEditingKey('');
+            updateTransactionTable();
+
+        } catch (errInfo)
+        {
+            console.log("Could not validate fields.", errInfo);
+        }
+    };
     
     return (
     !!store.payload ?
@@ -67,6 +117,12 @@ export const TransactionTableContainer: React.FC = observer(() => {
                     transactionResults={store.payload}
                     accounts={store.accountInformationStore.payload}
                     budgetCategories={store.budgetCategoryStore.payload}
+                    isEditing={isEditing}
+                    onEdit={onEdit}
+                    onCancelEdit={onCancelEdit}
+                    onEditSave={onEditSave}
+                    form={form}
+                    editingKey={editingKey}
                 />
             </>
         )
