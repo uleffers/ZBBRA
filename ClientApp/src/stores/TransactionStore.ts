@@ -1,7 +1,7 @@
 ﻿import { action, decorate } from 'mobx';
 
 import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingStore";
-import {AccountDTO, Configuration, TransactionApi, TransactionDTO} from "swagger-api";
+import {AccountDTO, Configuration, CreateTransactionDTO, TransactionApi, TransactionDTO} from "swagger-api";
 import {AccountStore} from "./AccountStore";
 import {BudgetCategoryStore} from "./BudgetCategoryStore";
 
@@ -25,10 +25,16 @@ export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
         const promise = this.transactionApi.apiTransactionsUpdatePatch(transactionDTO, undefined);
         this.callPromise(promise, false);
     }
+    
+    addTransaction = (createTransactionDTO: CreateTransactionDTO) => {
+        const promise = this.transactionApi.apiTransactionsAddPost(createTransactionDTO, undefined);
+        this.callPromise(promise, false);
+    }
 }
 
 decorate(TransactionStore, {
     getTransactionsInInterval: action,
     getTransactionsInMonth: action,
     updateTransaction: action,
+    addTransaction: action,
 });

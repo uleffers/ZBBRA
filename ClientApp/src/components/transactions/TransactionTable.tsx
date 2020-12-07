@@ -1,9 +1,10 @@
 ﻿import React from 'react';
-import {Form, Popconfirm, Table} from "antd";
+import {Form, Popconfirm, Select, Table} from "antd";
 import text from "../../Texts";
 import {AccountDTO, BudgetCategoryDTO, TransactionDTO} from "swagger-api";
 import formatDate from "../../Utils/formatDate";
 import EditableCell from "../common/EditableCell";
+import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
 
 export interface TransactionTableProps {
     transactionResults: Array<TransactionDTO>;
@@ -20,6 +21,19 @@ export interface TransactionTableProps {
 const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTableProps) => {
     const texts = text.transactionPage;
     const tableName = '-transactionTable';
+    const { Option } = Select;
+
+    const generateAccountOptions = () => {
+        return props.accounts.map(function (account, i) {
+            return <Option value={account.accountId || ''}>{account.accountName || ''}</Option>
+        })
+    }
+    
+    const generateCategoryOptions = () => {
+        return props.budgetCategories.map(function (category, i) {
+            return <Option value={category.budgetCategoryId || ''}>{category.categoryName}</Option>
+        })
+    }
     
     const columns = [
         {
@@ -29,16 +43,45 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             render: (date: Date ) => { 
                 return formatDate(new Date(date.toString() ?? '')); 
             },
-            Editable: true,
+            onCell: (record: TransactionDTO) => ({
+                record,
+                inputType: 'text',
+                dataIndex: 'transactionDate',
+                title: texts.date,
+                editing: props.isEditing(record.transactionId),
+            }),
         },
         {
-            title: texts.amount,
-            dataIndex: 'transactionAmount',
-            key: 'amount' + tableName,
-            render: (amount: Number) => {
-                return amount.toFixed(2).toString() + " kr."
+            title: texts.expense,
+            dataIndex: 'expenseAmount',
+            key: 'expenseAmount' + tableName,
+            align: 'right' as 'right',
+            render: (expenseAmount: Number) => {
+                return (expenseAmount !== 0 ? expenseAmount.toFixed(2).toString() + " kr." : '')
             },
-            Editable: true,
+            onCell: (record: TransactionDTO) => ({
+                record,
+                inputType: 'amount',
+                dataIndex: 'expenseAmount',
+                title: texts.expense,
+                editing: props.isEditing(record.transactionId),
+            }),
+        },
+        {
+            title: texts.income,
+            dataIndex: 'incomeAmount',
+            key: 'incomeAmount' + tableName,
+            align: 'right' as 'right',
+            render: (incomeAmount: Number) => {
+                return (incomeAmount !== 0 ? incomeAmount.toFixed(2).toString() + " kr." : '');
+            },
+            onCell: (record: TransactionDTO) => ({
+                record,
+                inputType: 'amount',
+                dataIndex: 'incomeAmount',
+                title: texts.income,
+                editing: props.isEditing(record.transactionId),
+            }),
         },
         {
             title: texts.category,
@@ -47,7 +90,14 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             render: (budgetCategoryId: string) => {
                 return props.budgetCategories.find(cat => cat.budgetCategoryId === budgetCategoryId)?.categoryName ?? '';
             },
-            Editable: false,
+            onCell: (record: TransactionDTO) => ({
+                record,
+                inputType: 'select',
+                dataIndex: 'budgetCategoryId',
+                title: texts.category,
+                editing: props.isEditing(record.transactionId),
+                selectOptions: generateCategoryOptions(),
+            }),
         },
         {
             title: texts.account,
@@ -56,13 +106,26 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             render: (accountId: string) => {
                 return props.accounts.find(a => a.accountId == accountId)?.accountName ?? '';
             },
-            Editable: false,
+            onCell: (record: TransactionDTO) => ({
+                record,
+                inputType: 'select',
+                dataIndex: 'accountId',
+                title: texts.account,
+                editing: props.isEditing(record.transactionId),
+                selectOptions: generateAccountOptions(),
+            }),
         },
         {
             title: texts.note,
             dataIndex: 'transactionNote',
             key: 'note' + tableName,
-            Editable: true,
+            onCell: (record: TransactionDTO) => ({
+                record,
+                inputType: 'text',
+                dataIndex: 'transactionNote',
+                title: texts.note,
+                editing: props.isEditing(record.transactionId),
+            }),
         },
         {
             title: 'Edit',
@@ -94,48 +157,6 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
         },
     ];
     
-    const mergedColumns = columns.map((col) => {
-        if (!col.Editable){
-            return col;
-        }
-        
-        let inputType: string;
-        let tableName = '-transactionTable';
-        switch(col.key){
-            case 'date' + tableName:
-            {
-                inputType = 'text';
-                break;
-            }
-            case 'amount' + tableName:
-            {
-                inputType = 'number';
-                break;
-            }
-            case 'note' + tableName:
-            {
-                inputType = 'text';
-                break;
-            }
-            default:
-            {
-                inputType = 'text';
-                break;
-            }
-        }
-        
-        return {
-            ...col,
-            onCell: (record: TransactionDTO) => ({
-                record,
-                inputType: inputType,
-                dataIndex: col.dataIndex,
-                title: col.title,
-                editing: props.isEditing(record.transactionId),
-            }),
-        };
-    });
-    
     return (
         <Form form={props.form} component={false}>
             <Table
@@ -146,7 +167,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 }}
                 bordered
                 className={'advancedSearch-table'}
-                columns={mergedColumns}
+                columns={columns}
                 dataSource={props.transactionResults}
                 pagination={{pageSize: 20}}
             />

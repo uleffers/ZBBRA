@@ -13,7 +13,9 @@ namespace Database.Models
         
         public DateTime TransactionDate { get; set; }
 
-        public decimal TransactionAmount { get; set;  }
+        public decimal IncomeAmount { get; set;  }
+        
+        public decimal ExpenseAmount { get; set;  }
 
         public string TransactionNote { get; set; }
 

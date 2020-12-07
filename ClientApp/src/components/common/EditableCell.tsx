@@ -1,4 +1,4 @@
-import {Input, InputNumber, Form, DatePicker} from 'antd';
+import {Input, InputNumber, Form, DatePicker, Select} from 'antd';
 import React, {Children} from "react";
 import {TransactionDTO} from "swagger-api";
 
@@ -7,10 +7,11 @@ export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     dataIndex: string;
     title: any;
     required: boolean;
-    inputType: 'number' | 'text' | 'date';
+    inputType: 'amount' | 'text' | 'date' | 'select' ;
     record: TransactionDTO;
     index: number;
     children: React.ReactNode;
+    selectOptions?: React.ReactNode[];
 }
 
 const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => {
@@ -22,7 +23,7 @@ const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => 
             inputNode = <Input />;
             break;
         }
-        case "number":
+        case "amount":
         {
             inputNode = <InputNumber />
             break;
@@ -32,6 +33,14 @@ const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => 
             inputNode = <DatePicker />
             break;
         }
+        case "select":
+        {
+            inputNode = (
+                <Select >
+                    {props.selectOptions}
+                </Select>)
+            break;
+        }
         default:
         {
             inputNode = <Input />;
@@ -39,7 +48,7 @@ const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => 
         }
     }
     
-    return <td>
+    return <td align={(props.inputType === "amount" ? "right" : "left")}>
             {
                 props.editing ?
                     <Form.Item name={props.dataIndex} style={{margin: 0}} required={false}>

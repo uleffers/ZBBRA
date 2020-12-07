@@ -66,7 +66,8 @@ namespace ZBBRA.Business
                 .FirstOrDefaultAsync(x => x.TransactionId == transaction.TransactionId);
 
             persistedTransaction.TransactionDate = transaction.TransactionDate;
-            persistedTransaction.TransactionAmount = transaction.TransactionAmount;
+            persistedTransaction.ExpenseAmount = transaction.ExpenseAmount;
+            persistedTransaction.IncomeAmount = transaction.IncomeAmount;
             persistedTransaction.TransactionNote = transaction.TransactionNote;
             persistedTransaction.BudgetCategoryId = transaction.BudgetCategoryId;
             persistedTransaction.AccountId = transaction.AccountId;
@@ -99,7 +100,7 @@ namespace ZBBRA.Business
             {
                 transactions.Add(new Transaction()
                 {
-                    TransactionAmount = random.Next(- 5000, 5000),
+                    ExpenseAmount = random.Next(- 5000, 5000),
                     BudgetCategoryId = categories[random.Next(categories.Count)],
                     AccountId = accounts[random.Next(accounts.Count)],
                     TransactionNote = notes[random.Next(notes.Count)],
@@ -137,7 +138,8 @@ namespace ZBBRA.Business
                 {
                     TransactionId = x.TransactionId,
                     TransactionDate = x.TransactionDate,
-                    TransactionAmount = x.TransactionAmount,
+                    ExpenseAmount = x.ExpenseAmount,
+                    IncomeAmount = x.IncomeAmount,
                     TransactionNote = x.TransactionNote,
                     BudgetCategoryId = x.BudgetCategoryId,
                     AccountId = x.AccountId
@@ -171,7 +173,8 @@ namespace ZBBRA.Business
                 {
                     TransactionId = x.TransactionId,
                     TransactionDate = x.TransactionDate,
-                    TransactionAmount = x.TransactionAmount,
+                    ExpenseAmount = x.ExpenseAmount,
+                    IncomeAmount = x.IncomeAmount,
                     TransactionNote = x.TransactionNote,
                     BudgetCategoryId = x.BudgetCategoryId,
                     AccountId = x.AccountId
