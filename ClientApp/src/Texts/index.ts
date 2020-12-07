@@ -11,7 +11,8 @@ const header = {
 
 const transactionPage = {
     date: "Date",
-    amount: "Amount",
+    expense: "Expense",
+    income: "Income",
     note: "Note",
     category: "Category",
     account: "Account",

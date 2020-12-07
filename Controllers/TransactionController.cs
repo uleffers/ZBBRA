@@ -47,6 +47,31 @@ namespace ZBBRA.Controllers
             var transaction = _mapper.Map<Transaction>(createTransactionDto);
             await _transactionManager.AddTransaction(transaction);
         }
+        
+        /// <summary>
+        /// Updates transaction in the DB
+        /// </summary>
+        /// <param name="updateTransactionDto"></param>
+        /// <returns></returns>
+        [HttpPatch("transactions/update")]
+        public async Task UpdateTransaction(TransactionDTO updateTransactionDto)
+        {
+            var transaction = _mapper.Map<Transaction>(updateTransactionDto);
+            await _transactionManager.UpdateTransaction(transaction);
+        }
+
+        /// <summary>
+        /// Generates new transactions to the DB
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <param name="numberOfTransactions"></param>
+        /// <returns></returns>
+        [HttpPost("transactions/generatedata")]
+        public async Task GenerateTestdata(int month, int year, int numberOfTransactions)
+        {
+            await _transactionManager.GenerateTestdata(month, year, numberOfTransactions);
+        }
 
         /// <summary>
         /// Fetches all transactions in a given interval

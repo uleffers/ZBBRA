@@ -17,6 +17,19 @@ namespace ZBBRA.Business.Interfaces
         /// <param name="transaction"></param>
         /// <returns></returns>
         Task AddTransaction(Transaction transaction);
+
+        /// <summary>
+        /// Updates transaction already in the DB
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        Task UpdateTransaction(Transaction transaction);
+
+        /// <summary>
+        /// Generates 
+        /// </summary>
+        /// <returns></returns>
+        Task GenerateTestdata(int month, int year, int numberOfTransactions);
         
         /// <summary>
         /// Gets a list of transaction for a given month

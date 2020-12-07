@@ -18,9 +18,14 @@ namespace ZBBRA.Controllers.DTOs
         public DateTime TransactionDate { get; set; }
 
         /// <summary>
-        /// Transaction amount
+        /// Income
         /// </summary>
-        public decimal TransactionAmount { get; set;  }
+        public decimal IncomeAmount { get; set;  }
+        
+        /// <summary>
+        /// Expense
+        /// </summary>
+        public decimal ExpenseAmount { get; set;  }
 
         /// <summary>
         /// Note on the transaction

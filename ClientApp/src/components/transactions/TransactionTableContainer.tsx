@@ -4,12 +4,22 @@ import {TransactionStore} from "../../stores/TransactionStore";
 import {useStore} from "../../Hooks/stores";
 import TransactionTable from "./TransactionTable";
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
-import {Col, InputNumber, Row, Select} from "antd";
+import {Button, Col, Form, InputNumber, Row, Select} from "antd";
+import {TransactionDTO} from "swagger-api/dist/api/api";
+import formatDate from "../../Utils/formatDate";
+import {CreateTransactionDTO} from "swagger-api";
+
+import { PlusOutlined } from '@ant-design/icons';
 
 export const TransactionTableContainer: React.FC = observer(() => {
 
+    const [form] = Form.useForm();
+    const [editingKey, setEditingKey] = useState('');
+    
     const [monthState, setMonthState] = useState(0);
     const [yearState, setYearState] = useState(0);
+    
+    const [newTransaction, setNewTransaction] = useState('')
 
     const store: TransactionStore = useStore(TransactionStore);
     const { Option } = Select;
@@ -34,40 +44,139 @@ export const TransactionTableContainer: React.FC = observer(() => {
             store.getTransactionsInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, e);
         }
     }
+
+    const isEditing = (transactionId?: string) => transactionId === editingKey;
+
+    const updateTransactionTable = () =>  {
+        store.getTransactionsInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, yearState === 0 ? new Date().getFullYear() : yearState);
+    }
+    const onEdit = (record: TransactionDTO) => {
+        form.setFieldsValue({
+            transactionDate: '',
+            transactionAmount: '',
+            transactionNote: '',
+            budgetCategoryId: '',
+            accountId: '',
+            ...record,
+        });
+        
+        form.setFieldsValue({transactionDate: formatDate(new Date(record.transactionDate?.toString() ?? ''))})
+        setEditingKey(record.transactionId ?? '');
+    };
+
+    const onCancelEdit = () => {
+        console.log("onCancelEdit")
+        setEditingKey('');
+        setNewTransaction('')
+    };
+    
+    const handleAdd = () => {
+        const returnTransaction: TransactionDTO = {
+            transactionId: '-1',
+            transactionNote: '',
+            incomeAmount: 0,
+            expenseAmount: 0,
+            transactionDate: new Date()
+        };
+        setNewTransaction(JSON.stringify(returnTransaction))
+        onEdit(returnTransaction);
+    }
+    
+    const onEditSave = async (e: TransactionDTO) => {
+        console.log("onEditSave")
+        try {
+            const row = await form.validateFields();
+            
+            let currentItem = store.payload.find((transaction) => transaction.transactionId == e.transactionId);
+            
+            if (currentItem){
+                let dateString = form.getFieldValue('transactionDate');
+                let date = dateString.split('-');
+
+                const returnTransaction: TransactionDTO = {
+                    transactionId: currentItem.transactionId,
+                    budgetCategoryId: form.getFieldValue('budgetCategoryId'),
+                    accountId: form.getFieldValue('accountId'),
+                    transactionNote: form.getFieldValue('transactionNote'),
+                    expenseAmount: form.getFieldValue('expenseAmount'),
+                    incomeAmount: form.getFieldValue('incomeAmount'),
+                    transactionDate: new Date(Date.UTC(parseInt(date[2]) , parseInt(date[1]) - 1, parseInt(date[0])))
+                };
+                
+                console.log(returnTransaction.transactionDate);
+                await store.updateTransaction(returnTransaction);
+            } else {
+                let dateString = form.getFieldValue('transactionDate');
+                let date = dateString.split('-');
+
+                const returnTransaction: CreateTransactionDTO = {
+                    budgetCategoryId: (form.getFieldValue('budgetCategoryId') !== '' ? form.getFieldValue('budgetCategoryId') : undefined),
+                    accountId: form.getFieldValue('accountId'),
+                    transactionNote: form.getFieldValue('transactionNote'),
+                    expenseAmount: form.getFieldValue('expenseAmount'),
+                    incomeAmount: form.getFieldValue('incomeAmount'),
+                    transactionDate: new Date(Date.UTC(parseInt(date[2]) , parseInt(date[1]) - 1, parseInt(date[0])))
+                };
+
+                await store.addTransaction(returnTransaction);
+                setNewTransaction('');
+            }
+            setEditingKey('');
+            updateTransactionTable();
+
+        } catch (errInfo)
+        {
+            console.log("Could not validate fields.", errInfo);
+        }
+    };
+    
+    const generateOptions = () => {
+        let months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        return months.map(function (month, i) {
+            return <Option value={month}>{MONTH_INT_MAP.get(month) || 'NotMapped'}</Option>
+        })
+    }
     
     return (
     !!store.payload ?
         (   
             <>
-                <Row>
-                    <Col span={20}>
-                        <span>Netto: {store.payload.map((dto) => dto.transactionAmount || 0).reduce((a, b) => a + b, 0)} kr.</span>
-                    </Col>
+                <Row justify="space-between">
                     <Col span={2}>
-                        <Select onChange={onMonthChange} style={{ width: 120 }} defaultValue={new Date().getMonth() + 1}>
-                            <Option value={1}>{MONTH_INT_MAP.get(1) || 'NotMapped'}</Option>
-                            <Option value={2}>{MONTH_INT_MAP.get(2) || 'NotMapped'}</Option>
-                            <Option value={3}>{MONTH_INT_MAP.get(3) || 'NotMapped'}</Option>
-                            <Option value={4}>{MONTH_INT_MAP.get(4) || 'NotMapped'}</Option>
-                            <Option value={5}>{MONTH_INT_MAP.get(5) || 'NotMapped'}</Option>
-                            <Option value={6}>{MONTH_INT_MAP.get(6) || 'NotMapped'}</Option>
-                            <Option value={7}>{MONTH_INT_MAP.get(7) || 'NotMapped'}</Option>
-                            <Option value={8}>{MONTH_INT_MAP.get(8) || 'NotMapped'}</Option>
-                            <Option value={9}>{MONTH_INT_MAP.get(9) || 'NotMapped'}</Option>
-                            <Option value={10}>{MONTH_INT_MAP.get(10) || 'NotMapped'}</Option>
-                            <Option value={11}>{MONTH_INT_MAP.get(11) || 'NotMapped'}</Option>
-                            <Option value={12}>{MONTH_INT_MAP.get(12) || 'NotMapped'}</Option>
+                        <Select onChange={onMonthChange} defaultValue={new Date().getMonth() + 1}>
+                            {generateOptions()}
                         </Select>
                     </Col>
                     <Col span={2}>
                         <InputNumber onChange={onYearChange} defaultValue={new Date().getFullYear()}/>
                     </Col>
+                    <Col span={3} offset={16}>
+                        <span>Netto: {
+                            (store.payload.map((dto) => dto.incomeAmount || 0).reduce((a, b) => a + b, 0)
+                                - store.payload.map((dto) => dto.expenseAmount || 0).reduce((a, b) => a + b, 0))
+                            .toFixed(2)} kr.</span>
+                    </Col>
+                    <Col span={1}>
+                        <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                            <PlusOutlined />
+                        </Button>
+                    </Col>
                 </Row>
-                <TransactionTable
-                    transactionResults={store.payload}
-                    accounts={store.accountInformationStore.payload}
-                    budgetCategories={store.budgetCategoryStore.payload}
-                />
+                <Row>
+                    <Col span={24}>
+                        <TransactionTable
+                            transactionResults={newTransaction==='' ? store.payload : [JSON.parse(newTransaction), ...store.payload]}
+                            accounts={store.accountInformationStore.payload}
+                            budgetCategories={store.budgetCategoryStore.payload}
+                            isEditing={isEditing}
+                            onEdit={onEdit}
+                            onCancelEdit={onCancelEdit}
+                            onEditSave={onEditSave}
+                            form={form}
+                            editingKey={editingKey}
+                        />
+                    </Col>
+                </Row>
             </>
         )
         : <React.Fragment />
