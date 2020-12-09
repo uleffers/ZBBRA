@@ -30,6 +30,11 @@ export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
         const promise = this.transactionApi.apiTransactionsAddPost(createTransactionDTO, undefined);
         this.callPromise(promise, false);
     }
+    
+    deleteTransaction = (transactionId: string) => {
+        const promise = this.transactionApi.apiTransactionsDeleteDelete(transactionId, undefined);
+        this.callPromise(promise, false);
+    }
 }
 
 decorate(TransactionStore, {
@@ -37,4 +42,5 @@ decorate(TransactionStore, {
     getTransactionsInMonth: action,
     updateTransaction: action,
     addTransaction: action,
+    deleteTransaction: action,
 });

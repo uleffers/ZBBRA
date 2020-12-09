@@ -26,6 +26,13 @@ namespace ZBBRA.Business.Interfaces
         Task UpdateTransaction(Transaction transaction);
 
         /// <summary>
+        /// Delete a transaction in the DB.
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <returns></returns>
+        Task DeleteTransaction(Guid transactionId);
+
+        /// <summary>
         /// Generates 
         /// </summary>
         /// <returns></returns>

@@ -61,6 +61,16 @@ namespace ZBBRA.Controllers
         }
 
         /// <summary>
+        /// Deletes transaction from DB
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <returns></returns>
+        [HttpDelete("transactions/delete")]
+        public async Task DeleteTransaction(Guid transactionId)
+        {
+            await _transactionManager.DeleteTransaction(transactionId);
+        }
+        /// <summary>
         /// Generates new transactions to the DB
         /// </summary>
         /// <param name="month"></param>

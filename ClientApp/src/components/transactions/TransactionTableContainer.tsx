@@ -136,28 +136,44 @@ export const TransactionTableContainer: React.FC = observer(() => {
             return <Option value={month}>{MONTH_INT_MAP.get(month) || 'NotMapped'}</Option>
         })
     }
+
+    const onDelete = async (e: TransactionDTO) => {
+        if (!!e.transactionId){
+            store.deleteTransaction(e.transactionId);
+            updateTransactionTable();
+        }
+    }
+    
     
     return (
     !!store.payload ?
         (   
             <>
-                <Row justify="space-between">
+                <Row align="bottom" style={{marginBottom:8}}>
                     <Col span={2}>
-                        <Select onChange={onMonthChange} defaultValue={new Date().getMonth() + 1}>
+                        <Select 
+                            onChange={onMonthChange} 
+                            defaultValue={new Date().getMonth() + 1} 
+                            style={{width:"100%"}}
+                        >
                             {generateOptions()}
                         </Select>
                     </Col>
                     <Col span={2}>
-                        <InputNumber onChange={onYearChange} defaultValue={new Date().getFullYear()}/>
+                        <InputNumber 
+                            onChange={onYearChange} 
+                            defaultValue={new Date().getFullYear()}
+                            style={{width:"100%"}}
+                        />
                     </Col>
-                    <Col span={3} offset={16}>
-                        <span>Netto: {
+                    <Col span={2} offset={17}>
+                        <span >Netto: {
                             (store.payload.map((dto) => dto.incomeAmount || 0).reduce((a, b) => a + b, 0)
                                 - store.payload.map((dto) => dto.expenseAmount || 0).reduce((a, b) => a + b, 0))
                             .toFixed(2)} kr.</span>
                     </Col>
                     <Col span={1}>
-                        <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                        <Button onClick={handleAdd} type="primary" style={{float:'right', width:"100%"}}>
                             <PlusOutlined />
                         </Button>
                     </Col>
@@ -174,6 +190,7 @@ export const TransactionTableContainer: React.FC = observer(() => {
                             onEditSave={onEditSave}
                             form={form}
                             editingKey={editingKey}
+                            onDelete={onDelete}
                         />
                     </Col>
                 </Row>

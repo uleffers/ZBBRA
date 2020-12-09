@@ -1,10 +1,12 @@
 ﻿import React from 'react';
-import {Form, Popconfirm, Select, Table} from "antd";
+import {Button, Form, Popconfirm, Select, Table} from "antd";
 import text from "../../Texts";
 import {AccountDTO, BudgetCategoryDTO, TransactionDTO} from "swagger-api";
 import formatDate from "../../Utils/formatDate";
 import EditableCell from "../common/EditableCell";
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
+import moment from 'moment';
+import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 
 export interface TransactionTableProps {
     transactionResults: Array<TransactionDTO>;
@@ -16,6 +18,7 @@ export interface TransactionTableProps {
     onEditSave: Function;
     editingKey: string;
     form:any;
+    onDelete:Function;
 }
 
 const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTableProps) => {
@@ -50,6 +53,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 title: texts.date,
                 editing: props.isEditing(record.transactionId),
             }),
+            sorter: (a:TransactionDTO, b:TransactionDTO) => moment(a.transactionDate).unix() - moment(b.transactionDate).unix(),
         },
         {
             title: texts.expense,
@@ -66,6 +70,8 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 title: texts.expense,
                 editing: props.isEditing(record.transactionId),
             }),
+            sorter: (a:TransactionDTO, b:TransactionDTO) => (a.expenseAmount === 0 ? -Number.MAX_VALUE : (a.expenseAmount || -Number.MAX_VALUE)) 
+                - (b.expenseAmount === 0 ? -Number.MAX_VALUE : (b.expenseAmount || -Number.MAX_VALUE)),
         },
         {
             title: texts.income,
@@ -82,6 +88,8 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 title: texts.income,
                 editing: props.isEditing(record.transactionId),
             }),
+            sorter: (a:TransactionDTO, b:TransactionDTO) => (a.incomeAmount === 0 ? -Number.MAX_VALUE : (a.incomeAmount || -Number.MAX_VALUE)) 
+                - (b.incomeAmount === 0 ? -Number.MAX_VALUE : (b.incomeAmount || -Number.MAX_VALUE)),
         },
         {
             title: texts.category,
@@ -98,6 +106,8 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 editing: props.isEditing(record.transactionId),
                 selectOptions: generateCategoryOptions(),
             }),
+            filters: props.budgetCategories.map((category) => {return {value: category.budgetCategoryId || '', text: category.categoryName || ''}}),
+            onFilter: (value: any, record: TransactionDTO) => record.budgetCategoryId === value,
         },
         {
             title: texts.account,
@@ -114,6 +124,8 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 editing: props.isEditing(record.transactionId),
                 selectOptions: generateAccountOptions(),
             }),
+            filters: props.accounts.map((account) => {return {value: account.accountId || '', text: account.accountName || ''}}),
+            onFilter: (value: any, record: TransactionDTO) => record.accountId === value,
         },
         {
             title: texts.note,
@@ -126,6 +138,10 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 title: texts.note,
                 editing: props.isEditing(record.transactionId),
             }),
+            filters: Array.from(
+                new Set(props.transactionResults.map(transaction => transaction.transactionNote))
+            ).map(note => {return {value: note || '', text: note || ''}}),
+            onFilter: (value: any, record: TransactionDTO) => record.transactionNote === value,
         },
         {
             title: 'Edit',
@@ -149,9 +165,15 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                         </Popconfirm>
                     </span>
                 ) : (
-                    <a onClick={() => props.onEdit(record)}>
-                        Edit
-                    </a>
+                    <span>
+                        <Button onClick={() => props.onEdit(record)} type="default">
+                            <EditOutlined />
+                        </Button>
+                        <Button onClick={() => props.onDelete(record)} type="primary" danger>
+                            <DeleteOutlined />
+                        </Button>
+                    </span>
+                    
                 );
             },
         },

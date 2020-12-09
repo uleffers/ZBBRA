@@ -76,6 +76,23 @@ namespace ZBBRA.Business
         }
 
         /// <summary>
+        /// Deletes transaction from DB
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
+        public async Task DeleteTransaction(Guid transactionId)
+        {
+            if (transactionId == Guid.Empty || !await _context.Transaction.AnyAsync(x => x.TransactionId == transactionId))
+            {
+                throw new HttpRequestException("Transaction could not be found in DB.");
+            }
+
+            _context.Entry(new Transaction() {TransactionId = transactionId}).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
         /// Generates testdata for a given month
         /// </summary>
         /// <param name="month"></param>
