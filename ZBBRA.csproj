@@ -102,12 +102,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Business\Models" />
       <Folder Include="ClientApp\src\Common" />
     </ItemGroup>
 
     <ItemGroup>
       <TypeScriptCompile Include="ClientApp\src\components\budget\budgetPage.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTable.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTableContainer.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\EditableCell.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\form\FormikalizedNumberInput.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\footer\Footer.tsx" />
@@ -124,6 +125,7 @@
       <TypeScriptCompile Include="ClientApp\src\stores\baseStores\ErrorAndLoadingBindingStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\stores\baseStores\LoadingStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\stores\BudgetCategoryStore.ts" />
+      <TypeScriptCompile Include="ClientApp\src\stores\BudgetStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\stores\rootStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\stores\TransactionStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\Texts\index.ts" />

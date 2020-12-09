@@ -4,8 +4,10 @@ import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingSto
 import {AccountDTO, Configuration, CreateTransactionDTO, TransactionApi, TransactionDTO} from "swagger-api";
 import {AccountStore} from "./AccountStore";
 import {BudgetCategoryStore} from "./BudgetCategoryStore";
+import {useState} from "react";
 
 export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
+    
     transactionApi: TransactionApi = new TransactionApi(undefined, undefined, this.rootStore.axiosInstance);
     
     accountInformationStore: AccountStore = new AccountStore(this.rootStore);
@@ -13,27 +15,27 @@ export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
 
     getTransactionsInInterval = (dateFrom:Date, dateTo:Date) => {
         const promise = this.transactionApi.apiTransactionsGettransactionsintervalGet(dateFrom, dateTo, undefined);
-        this.callPromise(promise, false);
+        const _ignore =this.callPromise(promise, false);
     }
     
     getTransactionsInMonth = (month:number, year:number) => {
         const promise = this.transactionApi.apiTransactionsGettransactionsinmonthGet(month, year, undefined);
-        this.callPromise(promise, false);
+        const _ignore = this.callPromise(promise, false);
     }
     
-    updateTransaction = (transactionDTO: TransactionDTO) => {
+    updateTransaction = async (transactionDTO: TransactionDTO) => {
         const promise = this.transactionApi.apiTransactionsUpdatePatch(transactionDTO, undefined);
-        this.callPromise(promise, false);
+        const _ignore = await this.callPromise(promise, false);
     }
     
-    addTransaction = (createTransactionDTO: CreateTransactionDTO) => {
+    addTransaction = async (createTransactionDTO: CreateTransactionDTO) => {
         const promise = this.transactionApi.apiTransactionsAddPost(createTransactionDTO, undefined);
-        this.callPromise(promise, false);
+        const _ignore = await this.callPromise(promise, false);
     }
     
-    deleteTransaction = (transactionId: string) => {
+    deleteTransaction = async (transactionId: string) => {
         const promise = this.transactionApi.apiTransactionsDeleteDelete(transactionId, undefined);
-        this.callPromise(promise, false);
+        const _ignore = await this.callPromise(promise, false);
     }
 }
 

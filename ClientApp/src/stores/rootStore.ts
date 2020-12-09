@@ -3,12 +3,14 @@ import {TransactionStore} from "./TransactionStore";
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import {AccountStore} from "./AccountStore";
 import {BudgetCategoryStore} from "./BudgetCategoryStore";
+import {BudgetStore} from "./BudgetStore";
 
 export class RootStore {
     transactionStore: TransactionStore = new TransactionStore(this);
     accountInformationStore: AccountStore = new AccountStore(this);
     budgetCategoryStore: BudgetCategoryStore = new BudgetCategoryStore(this);
-
+    budgetStore: BudgetStore = new BudgetStore(this);
+    
     private innerAxiosInstance?: AxiosInstance;
 
     get axiosInstance(): AxiosInstance {

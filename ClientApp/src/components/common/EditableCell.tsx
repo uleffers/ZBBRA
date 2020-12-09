@@ -36,7 +36,7 @@ const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => 
         case "select":
         {
             inputNode = (
-                <Select >
+                <Select allowClear={true}>
                     {props.selectOptions}
                 </Select>)
             break;

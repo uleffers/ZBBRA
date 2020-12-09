@@ -103,7 +103,6 @@ export const TransactionTableContainer: React.FC = observer(() => {
                     transactionDate: new Date(Date.UTC(parseInt(date[2]) , parseInt(date[1]) - 1, parseInt(date[0])))
                 };
                 
-                console.log(returnTransaction.transactionDate);
                 await store.updateTransaction(returnTransaction);
             } else {
                 let dateString = form.getFieldValue('transactionDate');
@@ -123,7 +122,6 @@ export const TransactionTableContainer: React.FC = observer(() => {
             }
             setEditingKey('');
             updateTransactionTable();
-
         } catch (errInfo)
         {
             console.log("Could not validate fields.", errInfo);
@@ -139,7 +137,7 @@ export const TransactionTableContainer: React.FC = observer(() => {
 
     const onDelete = async (e: TransactionDTO) => {
         if (!!e.transactionId){
-            store.deleteTransaction(e.transactionId);
+            await store.deleteTransaction(e.transactionId);
             updateTransactionTable();
         }
     }

@@ -1,9 +1,15 @@
 ﻿import React from 'react';
+import {Divider, PageHeader} from "antd";
+import Text from "../../Texts";
+import {TransactionTableContainer} from "../transactions/TransactionTableContainer";
+import BudgetTableContainer from "./BudgetTableContainer";
 
 const BudgetPage: React.FC = () => {
     return (
         <>
-            budget page
+            <PageHeader title={Text.transactionPage.title}/>
+            <Divider />
+            <BudgetTableContainer/>
         </>
     );
 };

@@ -74,6 +74,7 @@ namespace ZBBRA
             });
             
             services.AddTransient<ITransactionManager, TransactionManager>();
+            services.AddTransient<IBudgetManager, BudgetManager>();
             services.AddTransient<IBaseInformationManager, BaseInformationManager>();
 
             services.AddCors(options =>

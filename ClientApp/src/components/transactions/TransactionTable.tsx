@@ -153,7 +153,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                     <span>
                         <a
                             href="javascript:;"
-                            onClick={() => props.onEditSave(record)}
+                            onClick={async () => await props.onEditSave(record)}
                             style={{
                                 marginRight: 8,
                             }}
@@ -169,7 +169,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                         <Button onClick={() => props.onEdit(record)} type="default">
                             <EditOutlined />
                         </Button>
-                        <Button onClick={() => props.onDelete(record)} type="primary" danger>
+                        <Button onClick={async () => await props.onDelete(record)} type="primary" danger>
                             <DeleteOutlined />
                         </Button>
                     </span>
@@ -187,8 +187,8 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                         cell: EditableCell,
                     },
                 }}
+                tableLayout={"auto"}
                 bordered
-                className={'advancedSearch-table'}
                 columns={columns}
                 dataSource={props.transactionResults}
                 pagination={{pageSize: 20}}

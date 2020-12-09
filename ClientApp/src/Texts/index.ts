@@ -19,6 +19,16 @@ const transactionPage = {
     title: "Transactions",
 }
 
+const budgetPage = {
+    date: "Date",
+    rollingBudget: "Previously budgetted",
+    budgetted: "Budgetted",
+    spent: "Spent",
+    category: "Category",
+    result: "Remaining",
+    title: "Budget page",
+}
+
 const months = {
     jan: "Jan",
     feb: "Feb",
@@ -37,6 +47,7 @@ const months = {
 const dk = {
     footer,
     header,
+    budgetPage,
     transactionPage,
     months
 }
