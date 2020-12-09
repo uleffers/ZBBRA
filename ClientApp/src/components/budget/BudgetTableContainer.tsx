@@ -138,7 +138,6 @@ export const BudgetTableContainer: React.FC = observer(() => {
                             expandedRowRender:record => (
                                 <BudgetTable budgetEntries={record.budgetEntrySpentDTOs || new Array<BudgetEntrySpentDTO>()} />
                             ),
-                            defaultExpandAllRows:true,
                         }}
                     />
                 </>

@@ -7,7 +7,7 @@ import BudgetTableContainer from "./BudgetTableContainer";
 const BudgetPage: React.FC = () => {
     return (
         <>
-            <PageHeader title={Text.transactionPage.title}/>
+            <PageHeader title={Text.budgetPage.title}/>
             <Divider />
             <BudgetTableContainer/>
         </>

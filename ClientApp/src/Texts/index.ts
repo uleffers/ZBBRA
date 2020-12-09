@@ -26,7 +26,7 @@ const budgetPage = {
     spent: "Spent",
     category: "Category",
     result: "Remaining",
-    title: "Budget page",
+    title: "Budget",
 }
 
 const months = {
