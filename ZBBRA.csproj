@@ -107,8 +107,10 @@
 
     <ItemGroup>
       <TypeScriptCompile Include="ClientApp\src\components\budget\budgetPage.tsx" />
-      <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTable.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTableInner.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTableContainer.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\budget\BugetTableOuter.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\budget\EditableBudgetCell.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\EditableCell.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\common\form\FormikalizedNumberInput.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\footer\Footer.tsx" />

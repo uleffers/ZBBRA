@@ -17,6 +17,7 @@ const transactionPage = {
     category: "Category",
     account: "Account",
     title: "Transactions",
+    actions: "Edit"
 }
 
 const budgetPage = {
@@ -27,6 +28,7 @@ const budgetPage = {
     category: "Category",
     result: "Remaining",
     title: "Budget",
+    actions: "Edit",
 }
 
 const months = {

@@ -1,7 +1,7 @@
 import { action, decorate } from 'mobx';
 
 import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingStore";
-import {BudgetApi, BudgetEntryDTO, BudgetGroupDTO, CreateBudgetEntryDTO} from "swagger-api";
+import {BudgetApi, BudgetGroupDTO, CreateBudgetEntryDTO} from "swagger-api";
 
 export class BudgetStore extends ArrayFetchingStore<BudgetGroupDTO> {
     budgetApi: BudgetApi = new BudgetApi(undefined, undefined, this.rootStore.axiosInstance);
@@ -16,8 +16,8 @@ export class BudgetStore extends ArrayFetchingStore<BudgetGroupDTO> {
         const _ignore = await this.callPromise(promise, false)
     }
     
-    updateBudgetEntry = async (budgetEntryDTO: BudgetEntryDTO) => {
-        const promise = this.budgetApi.apiBudgetUpdatePatch(budgetEntryDTO, undefined);
+    updateBudgetEntry = async (budgetEntryId:string, budgetEntryAmount:number) => {
+        const promise = this.budgetApi.apiBudgetUpdatePatch(budgetEntryId, budgetEntryAmount, undefined);
         const _ignore = await this.callPromise(promise, false);
     }
     

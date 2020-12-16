@@ -1,16 +1,15 @@
 import {observer} from "mobx-react-lite";
-import {Button, Card, Col, Form, InputNumber, Row, Select, Table} from "antd";
+import {Col, Form, InputNumber, Row, Select} from "antd";
 import React, {useEffect, useState} from "react";
-import {TransactionStore} from "../../stores/TransactionStore";
 import {useStore} from "../../Hooks/stores";
 import {BudgetStore} from "../../stores/BudgetStore";
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
-import {PlusOutlined} from "@ant-design/icons";
-import TransactionTable from "../transactions/TransactionTable";
-import BudgetTable from "./BudgetTable";
 import text from "../../Texts";
-
-import {BudgetEntrySpentDTO} from "swagger-api";
+import BudgetTableOuter from "./BugetTableOuter";
+import {
+    BudgetEntrySpentDTO,
+    CreateBudgetEntryDTO
+} from "swagger-api";
 
 export const BudgetTableContainer: React.FC = observer(() => {
     const texts = text.budgetPage;
@@ -20,7 +19,6 @@ export const BudgetTableContainer: React.FC = observer(() => {
 
     const [monthState, setMonthState] = useState(0);
     const [yearState, setYearState] = useState(0);
-
 
     const store: BudgetStore = useStore(BudgetStore);
     const { Option } = Select;
@@ -43,8 +41,10 @@ export const BudgetTableContainer: React.FC = observer(() => {
             store.getBudgetInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, e);
         }
     }
-
-    const isEditing = (transactionId?: string) => transactionId === editingKey;
+    
+    const isEditing = (budgetCategoryId:string) => {
+        return budgetCategoryId === editingKey;
+    };
 
     const updateBudgetTable = () =>  {
         store.getBudgetInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, yearState === 0 ? new Date().getFullYear() : yearState);
@@ -60,45 +60,55 @@ export const BudgetTableContainer: React.FC = observer(() => {
             return <Option value={month}>{MONTH_INT_MAP.get(month) || 'NotMapped'}</Option>
         })
     }
-    const tableName = '-outerBudgetTable';
+    
+    const onEdit = (record: BudgetEntrySpentDTO) => {
+        form.setFieldsValue({
+            budgetEntryId:'',
+            budgetEntryAmount: '',
+            transactionSum: '',
+            remaining: '',
+            previousBudgetEntrySum: '',
+            budgetCategoryName: '',
+            budgetCategoryId: '',
+            ...record,
+        });
 
-    const columns = [
+        setEditingKey(record.budgetCategoryId ?? '');
+    };
+
+        const onEditSave = async (e: BudgetEntrySpentDTO) => {
+        console.log("onEditSave");
+        try {
+            const row = await form.validateFields();
+
+            let currentItem = store.payload.find((budgetGroup) => budgetGroup.budgetEntrySpentDTOs
+                    ?.find((budgetEntry) => budgetEntry.budgetCategoryId === editingKey))
+                ?.budgetEntrySpentDTOs
+                ?.find((budgetEntry) => budgetEntry.budgetCategoryId === editingKey);
+            console.log(currentItem);
+
+            if (currentItem){
+                if (currentItem.budgetEntryId){
+                    console.log(form.getFieldValue('budgetEntryAmount'));
+                    await store.updateBudgetEntry(currentItem.budgetEntryId, form.getFieldValue('budgetEntryAmount') ?? 0);
+                } else {
+                    console.log("Adding new entry");
+                    const returnBudgetEntry: CreateBudgetEntryDTO = {
+                        month: monthState === 0 ? new Date().getMonth() + 1: monthState,
+                        year: yearState === 0 ? new Date().getFullYear() : yearState,
+                        budgetEntryAmount: form.getFieldValue('budgetEntryAmount'),
+                        budgetCategoryId: currentItem.budgetCategoryId,
+                    };
+                    await store.addBudgetEntry(returnBudgetEntry);
+                }
+            }
+            setEditingKey('');
+            updateBudgetTable()
+        } catch (errInfo)
         {
-            title: texts.category,
-            dataIndex: 'categoryGroupName',
-            key: 'categoryGroupName',
-            width: 400,
-            render: (record:any) => <b>{record}</b>
-        },
-        {
-            title: texts.rollingBudget,
-            dataIndex: 'previousBudgetEntrySum',
-            key: 'previousBudgetEntrySum' + tableName,
-            width: 300,
-            render: (record:any) => <b>{record} kr.</b>
-        },
-        {
-            title: texts.budgetted,
-            dataIndex: 'budgetEntryAmount',
-            key: 'budgetEntryAmount' + tableName,
-            width: 300,
-            render: (record:any) => <b>{record} kr.</b>
-        },
-        {
-            title: texts.spent,
-            dataIndex: 'transactionSum',
-            key: 'transactionSum' + tableName,
-            width: 300,
-            render: (record:any) => <b>{record} kr.</b>
-        },
-        {
-            title: texts.result,
-            dataIndex: 'remaining',
-            key: 'remaining' + tableName,
-            width: 300,
-            render: (record:any) => <b>{record} kr.</b>
+            console.log("Could not validate fields.", errInfo);
         }
-    ]
+    };
     
     return (
         !!store.payload ?
@@ -122,23 +132,13 @@ export const BudgetTableContainer: React.FC = observer(() => {
                             />
                         </Col>
                     </Row>
-                    <Table 
-                        columns={columns}
-                        dataSource={store.payload.map((x,i) => ({
-                            key: i, 
-                            categoryGroupName: x.categoryGroupName,
-                            previousBudgetEntrySum: x.previousBudgetEntrySum,
-                            budgetEntryAmount: x.budgetEntryAmount,
-                            transactionSum: x.transactionSum,
-                            remaining: x.remaining,
-                            budgetEntrySpentDTOs: x.budgetEntrySpentDTOs
-                        }))}
-                        pagination={false}
-                        expandable={{
-                            expandedRowRender:record => (
-                                <BudgetTable budgetEntries={record.budgetEntrySpentDTOs || new Array<BudgetEntrySpentDTO>()} />
-                            ),
-                        }}
+                    <BudgetTableOuter 
+                        budgetEntries={store.payload} 
+                        form={form} 
+                        isEditing={isEditing}
+                        onEdit={onEdit}
+                        onCancelEdit={onCancelEdit}
+                        onEditSave={onEditSave}
                     />
                 </>
             )

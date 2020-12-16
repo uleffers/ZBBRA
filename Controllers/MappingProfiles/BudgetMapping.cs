@@ -23,31 +23,26 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.PreviousBudgetEntrySum, act => act.MapFrom(src => src.BudgetEntrySpentModels.Sum(x => x.PreviousBudgetEntrySum)))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntrySpentModels.Sum(x => x.BudgetEntry.BudgetEntryAmount)))
                 .ForMember(des => des.BudgetEntrySpentDTOs, act => act.MapFrom(src => src.BudgetEntrySpentModels));
-            
+
             CreateMap<BudgetEntrySpentModel, BudgetEntrySpentDTO>()
                 .ForMember(des => des.BudgetEntryId, act => act.MapFrom(src => src.BudgetEntry.BudgetEntryId))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntry.BudgetEntryAmount))
                 .ForMember(des => des.BudgetCategoryName, act => act.MapFrom(src => src.BudgetCategory.CategoryName))
+                .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategory.BudgetCategoryId))
                 .ForMember(des => des.TransactionSum, act => act.MapFrom(src => src.TransactionSum))
                 .ForMember(des => des.PreviousBudgetEntrySum, act => act.MapFrom(src => src.PreviousBudgetEntrySum))
-                .ForMember(des => des.Remaining, act => act.MapFrom(src => 
-                    src.PreviousBudgetEntrySum + src.BudgetEntry.BudgetEntryAmount - src.TransactionSum
+                .ForMember(des => des.Remaining, act => act.MapFrom(src =>
+                        src.PreviousBudgetEntrySum + src.BudgetEntry.BudgetEntryAmount - src.TransactionSum
                     )
                 );
             
             CreateMap<BudgetEntryDTO, BudgetEntry>()
                 .ForMember(des => des.BudgetEntryId, act => act.MapFrom(src => src.BudgetEntryId))
-                .ForMember(des => des.Month, act => act.MapFrom(src => src.Month))
-                .ForMember(des => des.Year, act => act.MapFrom(src => src.Year))
-                .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategoryId))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntryAmount))
                 .ForAllOtherMembers(act => act.Ignore());
             
             CreateMap<BudgetEntry, BudgetEntryDTO>()
                 .ForMember(des => des.BudgetEntryId, act => act.MapFrom(src => src.BudgetEntryId))
-                .ForMember(des => des.Month, act => act.MapFrom(src => src.Month))
-                .ForMember(des => des.Year, act => act.MapFrom(src => src.Year))
-                .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategoryId))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntryAmount))
                 .ForAllOtherMembers(act => act.Ignore());
             

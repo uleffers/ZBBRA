@@ -39,31 +39,26 @@ namespace ZBBRA.Business
         /// <summary>
         /// Update budget entry
         /// </summary>
-        /// <param name="budgetEntry"></param>
+        /// <param name="budgetEntryId"></param>
+        /// <param name="budgetEntryAmount"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task UpdateBudgetEntry(BudgetEntry budgetEntry)
+        public async Task UpdateBudgetEntry(Guid budgetEntryId, decimal budgetEntryAmount)
         {
-            if (budgetEntry.BudgetCategoryId == Guid.Empty ||
-                !await _context.BudgetCategory.AnyAsync(x => x.BudgetCategoryId == budgetEntry.BudgetCategoryId))
-            {
-                throw new HttpRequestException("Invalid budget category");
-            }
-
-            if (budgetEntry.BudgetEntryId == Guid.Empty)
+            if (budgetEntryId == Guid.Empty)
             {
                 throw new HttpRequestException("Invalid BudgetEntryId");
             }
 
             var persistedEntry =
-                await _context.BudgetEntry.FirstOrDefaultAsync(x => x.BudgetEntryId == budgetEntry.BudgetEntryId);
+                await _context.BudgetEntry.FirstOrDefaultAsync(x => x.BudgetEntryId == budgetEntryId);
             
             if (persistedEntry == null)
             {
                 throw new HttpRequestException("Budget entry does not exist");
             }
 
-            persistedEntry.BudgetEntryAmount = budgetEntry.BudgetEntryAmount;
+            persistedEntry.BudgetEntryAmount = budgetEntryAmount;
 
             await _context.SaveChangesAsync();
 
@@ -93,7 +88,13 @@ namespace ZBBRA.Business
             var budgetEntrySpent = await _context.BudgetCategory
                 .Select(x => new BudgetEntrySpentModel
                 {
-                    BudgetEntry = x.BudgetEntries.FirstOrDefault(be => be.Month == month && be.Year == year),
+                    BudgetEntry = x.BudgetEntries.FirstOrDefault(be => be.Month == month && be.Year == year) ?? new BudgetEntry()
+                    {
+                        BudgetEntryAmount = x.DefaultAmount,
+                        BudgetCategoryId = x.BudgetCategoryId,
+                        Month = month,
+                        Year = year,
+                    },
                     BudgetCategory = new BudgetCategory()
                     {
                         BudgetCategoryId = x.BudgetCategoryId,

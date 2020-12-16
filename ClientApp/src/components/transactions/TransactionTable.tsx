@@ -3,10 +3,9 @@ import {Button, Form, Popconfirm, Select, Table} from "antd";
 import text from "../../Texts";
 import {AccountDTO, BudgetCategoryDTO, TransactionDTO} from "swagger-api";
 import formatDate from "../../Utils/formatDate";
-import EditableCell from "../common/EditableCell";
-import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
+import EditableTableCell from "../common/EditableTableCell";
 import moment from 'moment';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 export interface TransactionTableProps {
     transactionResults: Array<TransactionDTO>;
@@ -184,7 +183,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
             <Table
                 components={{
                     body: {
-                        cell: EditableCell,
+                        cell: EditableTableCell,
                     },
                 }}
                 tableLayout={"auto"}

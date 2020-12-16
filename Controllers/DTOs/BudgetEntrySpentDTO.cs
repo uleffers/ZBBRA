@@ -7,7 +7,7 @@ namespace ZBBRA.Controllers.DTOs
         /// <summary>
         /// EntryId
         /// </summary>
-        public Guid BudgetEntryId { get; set; }
+        public Guid? BudgetEntryId { get; set; }
 
         /// <summary>
         /// Entry amount
@@ -33,5 +33,10 @@ namespace ZBBRA.Controllers.DTOs
         /// Category name
         /// </summary>
         public string BudgetCategoryName { get; set; }
+
+        /// <summary>
+        /// Id of the budget category
+        /// </summary>
+        public Guid BudgetCategoryId { get; set; }
     }
 }

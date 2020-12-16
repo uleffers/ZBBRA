@@ -40,13 +40,13 @@ namespace ZBBRA.Controllers
         /// <summary>
         /// Update budget entry
         /// </summary>
-        /// <param name="budgetEntryDTO"></param>
+        /// <param name="budgetEntryId"></param>
+        /// <param name="budgetEntryAmount"></param>
         /// <returns></returns>
         [HttpPatch("budget/update")]
-        public async Task UpdateBudgetEntry(BudgetEntryDTO budgetEntryDTO)
+        public async Task UpdateBudgetEntry(Guid budgetEntryId, decimal budgetEntryAmount)
         {
-            var budgetEntry = _mapper.Map<BudgetEntry>(budgetEntryDTO);
-            await _budgetManager.UpdateBudgetEntry(budgetEntry);
+            await _budgetManager.UpdateBudgetEntry(budgetEntryId, budgetEntryAmount);
         }
 
         /// <summary>

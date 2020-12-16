@@ -2,19 +2,18 @@ import {Input, InputNumber, Form, DatePicker, Select} from 'antd';
 import React, {Children} from "react";
 import {TransactionDTO} from "swagger-api";
 
-export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+export interface EditableTableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
     dataIndex: string;
     title: any;
     required: boolean;
     inputType: 'amount' | 'text' | 'date' | 'select' ;
-    record: TransactionDTO;
     index: number;
     children: React.ReactNode;
     selectOptions?: React.ReactNode[];
 }
 
-const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => {
+const EditableTableCell: React.FC<EditableTableCellProps> = (props: EditableTableCellProps) => {
     let inputNode;
     
     switch(props.inputType){
@@ -25,7 +24,7 @@ const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => 
         }
         case "amount":
         {
-            inputNode = <InputNumber />
+            inputNode = <InputNumber style={{float:'right'}} />
             break;
         }
         case "date":
@@ -61,4 +60,4 @@ const EditableCell: React.FC<EditableCellProps> = (props: EditableCellProps) => 
 };
 
 
-export default EditableCell;
+export default EditableTableCell;
