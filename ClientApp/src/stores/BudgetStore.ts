@@ -1,14 +1,24 @@
-import { action, decorate } from 'mobx';
+import {action, decorate, observable, runInAction} from 'mobx';
 
 import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingStore";
-import {BudgetApi, BudgetGroupDTO, CreateBudgetEntryDTO} from "swagger-api";
+import {BudgetApi, BudgetGroupDTO, CreateBudgetEntryDTO, TransactionApi} from "swagger-api";
 
 export class BudgetStore extends ArrayFetchingStore<BudgetGroupDTO> {
     budgetApi: BudgetApi = new BudgetApi(undefined, undefined, this.rootStore.axiosInstance);
-
-    getBudgetInMonth = (month:number, year:number) => {
+    transactionApi: TransactionApi = new TransactionApi(undefined, undefined, this.rootStore.axiosInstance);
+    
+    income: number = 0;
+    
+    getBudgetInMonth = async (month: number, year: number) => {
         const promise = this.budgetApi.apiBudgetGetGet(month, year, undefined);
-        const _ignore = this.callPromise(promise, false);
+        await this.callPromise(promise, false);
+        const promiseIncome = this.transactionApi.apiTransactionsGetincomeinmonthGet(month, year, undefined);
+        
+        await promiseIncome.then(result => {
+            runInAction(() => {
+                this.income = result.data;
+            });
+        });
     }
 
     addBudgetEntry = async (createBudgetEntryDTO: CreateBudgetEntryDTO) => {
@@ -21,10 +31,17 @@ export class BudgetStore extends ArrayFetchingStore<BudgetGroupDTO> {
         const _ignore = await this.callPromise(promise, false);
     }
     
+    initializeBudgetEntries = async (month:number, year:number) => {
+        const promise = this.budgetApi.apiBudgetInitializePost(month, year, undefined);
+        const _ignore = await this.callPromise(promise, false);
+    }
+    
 }
 
 decorate(BudgetStore, {
     getBudgetInMonth: action,
     addBudgetEntry: action,
     updateBudgetEntry: action,
+    initializeBudgetEntries: action,
+    income: observable,
 });

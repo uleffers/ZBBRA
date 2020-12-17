@@ -90,7 +90,7 @@ namespace ZBBRA.Controllers
         /// <param name="dateTo"></param>
         /// <returns></returns>
         [HttpGet("transactions/gettransactionsinterval")]
-        public async Task<List<TransactionDTO>> GetTransactionsInInterval(DateTime dateFrom, DateTime dateTo)
+        public async Task<List<TransactionDTO>> GetTransactionsInMonth(DateTime dateFrom, DateTime dateTo)
         {
             var transactions = await _transactionManager.GetTransactions(dateFrom, dateTo);
             var transactionDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
@@ -98,17 +98,29 @@ namespace ZBBRA.Controllers
         }
         
         /// <summary>
-        /// Fetches all transactions in a given interval
+        /// Fetches all transactions in a given month
         /// </summary>
         /// <param name="month"></param>
         /// <param name="year"></param>
         /// <returns></returns>
         [HttpGet("transactions/gettransactionsinmonth")]
-        public async Task<List<TransactionDTO>> GetTransactionsInInterval(int month, int year)
+        public async Task<List<TransactionDTO>> GetTransactionsInMonth(int month, int year)
         {
             var transactions = await _transactionManager.GetTransactions(month, year);
             var transactionDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
             return transactionDTOs;
+        }
+        
+        /// <summary>
+        /// Fetches all income transaction in a given month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        [HttpGet("transactions/getincomeinmonth")]
+        public async Task<decimal> GetIncomeInMonth(int month, int year)
+        {
+            return await _transactionManager.GetIncome(month, year);
         }
     }
 }

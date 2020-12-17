@@ -90,7 +90,7 @@ namespace ZBBRA.Business
                 {
                     BudgetEntry = x.BudgetEntries.FirstOrDefault(be => be.Month == month && be.Year == year) ?? new BudgetEntry()
                     {
-                        BudgetEntryAmount = x.DefaultAmount,
+                        BudgetEntryAmount = 0,
                         BudgetCategoryId = x.BudgetCategoryId,
                         Month = month,
                         Year = year,
@@ -103,10 +103,11 @@ namespace ZBBRA.Business
                         {
                             CategoryGroupId = x.CategoryGroupId,
                             CategoryGroupIndex = x.CategoryGroup.CategoryGroupIndex,
-                            CategoryGroupName = x.CategoryGroup.CategoryGroupName
+                            CategoryGroupName = x.CategoryGroup.CategoryGroupName,
                         },
                         CategoryGroupId = x.CategoryGroupId,
-                        CategoryIndex = x.CategoryIndex
+                        CategoryIndex = x.CategoryIndex,
+                        DefaultAmount = x.DefaultAmount
                     },
                     TransactionSum = x.Transactions
                         .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth)
@@ -135,6 +136,49 @@ namespace ZBBRA.Business
             }
             
             return entriesInGroups;
+        }
+
+        /// <summary>
+        /// Initializes default budget for a given month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
+        public async Task InitializeBudgetMonth(int month, int year)
+        {
+            if (month < 1 || month > 12)
+            {
+                throw new HttpRequestException("Invald month");
+            }
+            
+            if (year < 1000 || year > 9999)
+            {
+                throw new HttpRequestException("Invald year");
+            }
+
+            var categoriesWithoutEntries = await _context.BudgetCategory
+                .AsNoTracking()
+                .Where(c => !c.BudgetEntries.Any(be => be.Month == month && be.Year == year) && c.DefaultAmount != 0)
+                .Select(c => new BudgetCategory()
+                {
+                    BudgetCategoryId = c.BudgetCategoryId,
+                    DefaultAmount = c.DefaultAmount
+                })
+                .ToListAsync();
+
+            var missingBudgetEntries = categoriesWithoutEntries
+                .Select(category => new BudgetEntry()
+                {
+                    Month = month, 
+                    Year = year, 
+                    BudgetEntryAmount = category.DefaultAmount, 
+                    BudgetCategoryId = category.BudgetCategoryId
+                })
+                .ToList();
+            
+            _context.BudgetEntry.AddRange(missingBudgetEntries);
+            await _context.SaveChangesAsync();
         }
     }
 }

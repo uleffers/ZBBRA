@@ -15,7 +15,10 @@ export interface BudgetTableOuterProps {
 
 const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOuterProps) => {
     const texts = text.budgetPage;
-
+    const widthNumbers = "17.5%";
+    const widthCategoryName = "20.5%";
+    const widthEdit = "8%";
+    
     const tableName = '-BudgetTableInner';
     
     const columns = [
@@ -23,14 +26,14 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             title: texts.category,
             dataIndex: 'categoryGroupName',
             key: 'categoryGroupName' + tableName,
-            width: 400,
+            width: widthCategoryName,
             render: (record:any) => <b>{record}</b>
         },
         {
             title: texts.rollingBudget,
             dataIndex: 'previousBudgetEntrySum',
             key: 'previousBudgetEntrySum' + tableName,
-            width: 300,
+            width: widthNumbers,
             render: (record:any) => <b>{record} kr.</b>,
             align:"right" as "right"
         },
@@ -38,7 +41,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             title: texts.budgetted,
             dataIndex: 'budgetEntryAmount',
             key: 'budgetEntryAmount' + tableName,
-            width: 300,
+            width: widthNumbers,
             render: (record:any) => <b>{record} kr.</b>,
             align:"right" as "right"
         },
@@ -46,7 +49,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             title: texts.spent,
             dataIndex: 'transactionSum',
             key: 'transactionSum' + tableName,
-            width: 300,
+            width: widthNumbers,
             render: (record:any) => <b>{record} kr.</b>,
             align:"right" as "right"
         },
@@ -54,7 +57,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             title: texts.result,
             dataIndex: 'remaining',
             key: 'remaining' + tableName,
-            width: 300,
+            width: widthNumbers,
             render: (record:any) => <b>{record} kr.</b>,
             align:"right" as "right"
         },
@@ -62,7 +65,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             title: texts.actions,
             dataIndex: 'operation',
             key: 'operation' + tableName,
-            width: 75,
+            width: widthEdit,
         }
     ]
 
@@ -78,6 +81,8 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
                 remaining: x.budgetEntrySpentDTOs?.reduce( function(cnt,o){ return cnt + (o.remaining || 0); }, 0),
                 budgetEntrySpentDTOs: x.budgetEntrySpentDTOs
             }))}
+            scroll={{ x: 1300 }}
+            bordered={true}
             pagination={false}
             expandable={{
                 expandedRowRender: (record:BudgetGroupDTO) => (
@@ -91,6 +96,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
                         categoryGroupName={record.categoryGroupName ?? ''}
                     />
                 ),
+                expandRowByClick: true,
             }}
         />
     )

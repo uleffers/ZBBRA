@@ -22,13 +22,16 @@ const transactionPage = {
 
 const budgetPage = {
     date: "Date",
-    rollingBudget: "Previously budgetted",
-    budgetted: "Budgetted",
+    rollingBudget: "Previously budgeted",
+    budgetted: "Budgeted",
     spent: "Spent",
     category: "Category",
     result: "Remaining",
     title: "Budget",
     actions: "Edit",
+    overview: "Overview",
+    toBudget: "To budget",
+    income: "Income",
 }
 
 const months = {

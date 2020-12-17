@@ -106,6 +106,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetOverviewCard.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\budget\budgetPage.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTableInner.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\budget\BudgetTableContainer.tsx" />
@@ -131,6 +132,7 @@
       <TypeScriptCompile Include="ClientApp\src\stores\rootStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\stores\TransactionStore.ts" />
       <TypeScriptCompile Include="ClientApp\src\Texts\index.ts" />
+      <TypeScriptCompile Include="ClientApp\src\Utils\EmptyGuid.ts" />
       <TypeScriptCompile Include="ClientApp\src\Utils\formatDate.ts" />
       <TypeScriptCompile Include="ClientApp\src\Utils\MonthMapper.ts" />
     </ItemGroup>

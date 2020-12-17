@@ -38,5 +38,10 @@ namespace ZBBRA.Controllers.DTOs
         /// Id of the budget category
         /// </summary>
         public Guid BudgetCategoryId { get; set; }
+        
+        /// <summary>
+        /// Default budget entry amount for the budget category
+        /// </summary>
+        public decimal DefaultBudgetEntryAmount { get; set; }
     }
 }

@@ -55,5 +55,14 @@ namespace ZBBRA.Business.Interfaces
         /// <returns></returns>
         /// <exception cref="HttpRequestException"></exception>
         Task<List<Transaction>> GetTransactions(int month, int year);
+        
+        /// <summary>
+        /// Gets the total income for a given month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
+        Task<decimal> GetIncome(int month, int year);
     }
 }

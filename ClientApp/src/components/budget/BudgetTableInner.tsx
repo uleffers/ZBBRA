@@ -18,13 +18,16 @@ export interface BudgetTableInnerProps {
 
 const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInnerProps) => {
     const texts = text.budgetPage;
-
+    const widthNumbers = "17.5%";
+    const widthCategoryName = "20.5%";
+    const widthEdit = "8%"; 
+    
     const tableName = '-innerBudgetTable';
     const columns = [
         {
             dataIndex: 'budgetCategoryName',
             key: 'budgetCategoryName' + tableName,
-            width: 400,
+            width: widthCategoryName,
             onCell: (record: BudgetEntrySpentDTO) => ({
                 record,
                 inputType: 'text',
@@ -36,7 +39,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
         {
             dataIndex: 'previousBudgetEntrySum',
             key: 'previousBudgetEntrySum' + tableName,
-            width: 300,
+            width: widthNumbers,
             onCell: (record: BudgetEntrySpentDTO) => ({
                 record,
                 inputType: 'amount',
@@ -49,20 +52,22 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
         {
             dataIndex: 'budgetEntryAmount',
             key: 'budgetEntryAmount' + tableName,
-            width: 300,
+            width: widthNumbers,
             onCell: (record: BudgetEntrySpentDTO) => ({
                 record,
                 inputType: 'amount',
                 dataIndex: 'budgetEntryAmount',
                 title: texts.budgetted,
                 editing: props.isEditing(record.budgetCategoryId),
+                autoFocus:true,
+                onPressEnter:props.onEditSave,
             }),
             render: (record:any) => <p>{record} kr.</p>
         },
         {
             dataIndex: 'transactionSum',
             key: 'transactionSum' + tableName,
-            width: 300,
+            width: widthNumbers,
             onCell: (record: BudgetEntrySpentDTO) => ({
                 record,
                 inputType: 'amount',
@@ -75,7 +80,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
         {
             dataIndex: 'remaining',
             key: 'remaining' + tableName,
-            width: 300,
+            width: widthNumbers,
             onCell: (record: BudgetEntrySpentDTO) => ({
                 record,
                 inputType: 'amount',
@@ -88,7 +93,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
         {
             title: 'Edit',
             dataIndex: 'operation',
-            width: 75,
+            width: widthEdit,
             key: 'operation' + tableName,
             render: (unUsed: any, record: BudgetEntrySpentDTO) => {
                 const editable = props.isEditing(record.budgetCategoryId);
@@ -97,17 +102,16 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
                         <Button onClick={async () => await props.onEditSave(record)} type="default">
                             <CheckOutlined />
                         </Button>
-                        <Button onClick={() => props.onCancelEdit} type="default">
+                        <Button onClick={() => props.onCancelEdit()} type="default" danger={true}>
                             <CloseOutlined />
                         </Button>
                     </span>
                 ) : (
                     <span>
                         <Button onClick={() => props.onEdit(record)} type="default">
-                            <EditOutlined />
+                            <EditOutlined  />
                         </Button>
                     </span>
-
                 );
             }
         },
@@ -126,6 +130,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
                 dataSource={props.budgetEntries}
                 pagination={false}
                 showHeader={false}
+                style={{margin:0}}
             />
         </Form>
     )

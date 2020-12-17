@@ -1,5 +1,5 @@
 import {observer} from "mobx-react-lite";
-import {Col, Form, InputNumber, Row, Select} from "antd";
+import {Button, Card, Col, Form, InputNumber, Row, Select} from "antd";
 import React, {useEffect, useState} from "react";
 import {useStore} from "../../Hooks/stores";
 import {BudgetStore} from "../../stores/BudgetStore";
@@ -10,6 +10,9 @@ import {
     BudgetEntrySpentDTO,
     CreateBudgetEntryDTO
 } from "swagger-api";
+import {EmptyGuid} from "../../Utils/EmptyGuid";
+import {FileAddOutlined, PlusOutlined} from "@ant-design/icons";
+import BudgetOverviewCard from "./BudgetOverviewCard";
 
 export const BudgetTableContainer: React.FC = observer(() => {
     const texts = text.budgetPage;
@@ -26,19 +29,22 @@ export const BudgetTableContainer: React.FC = observer(() => {
     useEffect(() => {
         let d = new Date();
         store.getBudgetInMonth(d.getMonth() + 1, d.getFullYear());
+        setYearState(new Date().getFullYear());
+        setMonthState(new Date().getMonth() + 1)
     }, []);
 
-    const onMonthChange = (e: any) => {
-        if (e !== monthState){
+    const onMonthChange = async (e: any) => {
+        if (e !== monthState) {
             setMonthState(e);
-            store.getBudgetInMonth(e, yearState === 0 ? new Date().getFullYear() : yearState);
+            await store.getBudgetInMonth(e, yearState === 0 ? new Date().getFullYear() : yearState);
+            console.log(store.income);
         }
     }
 
-    const onYearChange = (e: any) => {
-        if (e !== yearState && e>=1000 && e <= 9999){
+    const onYearChange = async (e: any) => {
+        if (e !== yearState && e >= 1000 && e <= 9999) {
             setYearState(e);
-            store.getBudgetInMonth(monthState === 0 ? new Date().getMonth() + 1: monthState, e);
+            await store.getBudgetInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
         }
     }
     
@@ -51,6 +57,7 @@ export const BudgetTableContainer: React.FC = observer(() => {
     }
 
     const onCancelEdit = () => {
+        console.log("onCancelEdit");
         setEditingKey('');
     };
 
@@ -73,6 +80,9 @@ export const BudgetTableContainer: React.FC = observer(() => {
             ...record,
         });
 
+        if (record.budgetEntryAmount === 0 && record.defaultBudgetEntryAmount !== 0){
+            form.setFieldsValue({budgetEntryAmount:record.defaultBudgetEntryAmount});
+        }
         setEditingKey(record.budgetCategoryId ?? '');
     };
 
@@ -88,15 +98,19 @@ export const BudgetTableContainer: React.FC = observer(() => {
             console.log(currentItem);
 
             if (currentItem){
-                if (currentItem.budgetEntryId){
-                    console.log(form.getFieldValue('budgetEntryAmount'));
-                    await store.updateBudgetEntry(currentItem.budgetEntryId, form.getFieldValue('budgetEntryAmount') ?? 0);
+                const entryAmount = (form.getFieldValue('budgetEntryAmount') !== null && form.getFieldValue('budgetEntryAmount') !== "") 
+                    ? form.getFieldValue('budgetEntryAmount') 
+                    : 0;
+                console.log(entryAmount);
+                if (currentItem.budgetEntryId && currentItem.budgetEntryId !== EmptyGuid){
+                    console.log(currentItem.budgetEntryId);
+                    await store.updateBudgetEntry(currentItem.budgetEntryId, entryAmount );
                 } else {
                     console.log("Adding new entry");
                     const returnBudgetEntry: CreateBudgetEntryDTO = {
                         month: monthState === 0 ? new Date().getMonth() + 1: monthState,
                         year: yearState === 0 ? new Date().getFullYear() : yearState,
-                        budgetEntryAmount: form.getFieldValue('budgetEntryAmount'),
+                        budgetEntryAmount: entryAmount,
                         budgetCategoryId: currentItem.budgetCategoryId,
                     };
                     await store.addBudgetEntry(returnBudgetEntry);
@@ -110,11 +124,16 @@ export const BudgetTableContainer: React.FC = observer(() => {
         }
     };
     
+    const onAutofill = async () => {
+        await store.initializeBudgetEntries(monthState, yearState);
+        updateBudgetTable();
+    }
+    
     return (
         !!store.payload ?
             (
                 <>
-                    <Row align="bottom" style={{marginBottom:8}}>
+                    <Row align="bottom" style={{marginBottom:8}} gutter={8}>
                         <Col span={2}>
                             <Select
                                 onChange={onMonthChange}
@@ -131,15 +150,27 @@ export const BudgetTableContainer: React.FC = observer(() => {
                                 style={{width:"100%"}}
                             />
                         </Col>
+                        <Col span={0.5}>
+                            <Button onClick={onAutofill} type="primary" style={{float:'right', width:"100%"}} >
+                                <FileAddOutlined />
+                            </Button>
+                        </Col>
                     </Row>
-                    <BudgetTableOuter 
-                        budgetEntries={store.payload} 
-                        form={form} 
-                        isEditing={isEditing}
-                        onEdit={onEdit}
-                        onCancelEdit={onCancelEdit}
-                        onEditSave={onEditSave}
-                    />
+                    <Row align={"top"} gutter={8}>
+                        <Col span={20}>
+                            <BudgetTableOuter
+                                budgetEntries={store.payload}
+                                form={form}
+                                isEditing={isEditing}
+                                onEdit={onEdit}
+                                onCancelEdit={onCancelEdit}
+                                onEditSave={onEditSave}
+                            />
+                        </Col>
+                        <Col span={4}>
+                            <BudgetOverviewCard budgetEntries={store.payload} income={store.income}/>
+                        </Col>
+                    </Row>
                 </>
             )
             : <React.Fragment />

@@ -60,6 +60,18 @@ namespace ZBBRA.Controllers
             var budgetEntry = _mapper.Map<BudgetEntry>(createBudgetEntryDTO);
             await _budgetManager.AddBudgetEntry(budgetEntry);
         }
+        
+        /// <summary>
+        /// Initialize budget month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        [HttpPost("budget/initialize")]
+        public async Task InitializeBudgetMonth(int month, int year)
+        {
+            await _budgetManager.InitializeBudgetMonth(month, year);
+        }
 
         /// <summary>
         /// Retrieves budget for a given month

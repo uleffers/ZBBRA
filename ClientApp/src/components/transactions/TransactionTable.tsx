@@ -5,7 +5,7 @@ import {AccountDTO, BudgetCategoryDTO, TransactionDTO} from "swagger-api";
 import formatDate from "../../Utils/formatDate";
 import EditableTableCell from "../common/EditableTableCell";
 import moment from 'moment';
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 export interface TransactionTableProps {
     transactionResults: Array<TransactionDTO>;
@@ -51,6 +51,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 dataIndex: 'transactionDate',
                 title: texts.date,
                 editing: props.isEditing(record.transactionId),
+                autoFocus: true,
             }),
             sorter: (a:TransactionDTO, b:TransactionDTO) => moment(a.transactionDate).unix() - moment(b.transactionDate).unix(),
         },
@@ -150,18 +151,12 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 const editable = props.isEditing(record.transactionId);
                 return editable ? (
                     <span>
-                        <a
-                            href="javascript:;"
-                            onClick={async () => await props.onEditSave(record)}
-                            style={{
-                                marginRight: 8,
-                            }}
-                        >
-                            Save
-                        </a>
-                        <Popconfirm title="Sure to cancel?" onConfirm={props.onCancelEdit}>
-                            <a>Cancel</a>
-                        </Popconfirm>
+                        <Button onClick={async () => await props.onEditSave(record)} type="default">
+                            <CheckOutlined />
+                        </Button>
+                        <Button onClick={() => props.onCancelEdit()} type="default" danger={true}>
+                            <CloseOutlined />
+                        </Button>
                     </span>
                 ) : (
                     <span>

@@ -11,25 +11,31 @@ export interface EditableTableCellProps extends React.HTMLAttributes<HTMLElement
     index: number;
     children: React.ReactNode;
     selectOptions?: React.ReactNode[];
+    autoFocus?:boolean;
+    onPressEnter?:any;
 }
 
 const EditableTableCell: React.FC<EditableTableCellProps> = (props: EditableTableCellProps) => {
     let inputNode;
     
+    const defaultOnPressEnter = () => {
+        return;
+    };
+    
     switch(props.inputType){
         case 'text':
         {
-            inputNode = <Input />;
+            inputNode = <Input autoFocus={props.autoFocus ?? false} onPressEnter={props.onPressEnter ?? defaultOnPressEnter}/>;
             break;
         }
         case "amount":
         {
-            inputNode = <InputNumber style={{float:'right'}} />
+            inputNode = <InputNumber style={{float:'right'}} autoFocus={props.autoFocus ?? false} onPressEnter={props.onPressEnter ?? defaultOnPressEnter} />
             break;
         }
         case "date":
         {
-            inputNode = <DatePicker />
+            inputNode = <DatePicker autoFocus={props.autoFocus ?? false}/>
             break;
         }
         case "select":

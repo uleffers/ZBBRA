@@ -29,6 +29,7 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntry.BudgetEntryAmount))
                 .ForMember(des => des.BudgetCategoryName, act => act.MapFrom(src => src.BudgetCategory.CategoryName))
                 .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategory.BudgetCategoryId))
+                .ForMember(des => des.DefaultBudgetEntryAmount, act => act.MapFrom(src => src.BudgetCategory.DefaultAmount))
                 .ForMember(des => des.TransactionSum, act => act.MapFrom(src => src.TransactionSum))
                 .ForMember(des => des.PreviousBudgetEntrySum, act => act.MapFrom(src => src.PreviousBudgetEntrySum))
                 .ForMember(des => des.Remaining, act => act.MapFrom(src =>

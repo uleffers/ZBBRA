@@ -11,5 +11,6 @@ namespace ZBBRA.Business.Interfaces
         Task AddBudgetEntry(BudgetEntry budgetEntry);
         Task UpdateBudgetEntry(Guid budgetEntryId, decimal budgetEntryAmount);
         Task<List<BudgetGroupModel>> GetBudgetForMonth(int month, int year);
+        Task InitializeBudgetMonth(int month, int year);
     }
 }

@@ -168,6 +168,34 @@ namespace ZBBRA.Business
         }
 
         /// <summary>
+        /// Sums all income in a given month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
+        public async Task<decimal> GetIncome(int month, int year)
+        {
+            if (month < 1 || month > 12)
+            {
+                throw new HttpRequestException("Invald month");
+            }
+            
+            if (year < 1000 || year > 9999)
+            {
+                throw new HttpRequestException("Invald year");
+            }
+
+            var income = await _context.Transaction
+                .AsNoTracking()
+                .Where(x => x.TransactionDate.Month == month && x.TransactionDate.Year == year)
+                .Select(x => x.IncomeAmount)
+                .ToListAsync();
+
+            return income.Sum();
+        }
+
+        /// <summary>
         /// Gets a list of transaction for a given month
         /// </summary>
         /// <param name="dateFrom"></param>
