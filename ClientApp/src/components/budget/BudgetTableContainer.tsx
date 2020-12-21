@@ -37,7 +37,6 @@ export const BudgetTableContainer: React.FC = observer(() => {
         if (e !== monthState) {
             setMonthState(e);
             await store.getBudgetInMonth(e, yearState === 0 ? new Date().getFullYear() : yearState);
-            console.log(store.income);
         }
     }
 
@@ -168,7 +167,7 @@ export const BudgetTableContainer: React.FC = observer(() => {
                             />
                         </Col>
                         <Col span={4}>
-                            <BudgetOverviewCard budgetEntries={store.payload} income={store.income}/>
+                            <BudgetOverviewCard budgetOverview={store.overview}/>
                         </Col>
                     </Row>
                 </>

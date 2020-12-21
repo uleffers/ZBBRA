@@ -57,7 +57,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
                 record,
                 inputType: 'amount',
                 dataIndex: 'budgetEntryAmount',
-                title: texts.budgetted,
+                title: texts.budgeted,
                 editing: props.isEditing(record.budgetCategoryId),
                 autoFocus:true,
                 onPressEnter:props.onEditSave,
@@ -88,7 +88,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
                 title: texts.result,
                 editing:false,
             }),
-            render: (record:any) => <p>{record} kr.</p>
+            render: (record:any) => <p style={{color: ((record || 0 ) < 0 ? "red" : "black")}}>{record} kr.</p>
         },
         {
             title: 'Edit',

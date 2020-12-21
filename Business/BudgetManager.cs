@@ -73,15 +73,7 @@ namespace ZBBRA.Business
         /// <exception cref="HttpRequestException"></exception>
         public async Task<List<BudgetGroupModel>> GetBudgetForMonth(int month, int year)
         {
-            if (month < 1 || month > 12)
-            {
-                throw new HttpRequestException("Invald month");
-            }
-            
-            if (year < 1000 || year > 9999)
-            {
-                throw new HttpRequestException("Invald year");
-            }
+            VerifyMonthAndYear(month, year);
 
             var nextMonth = month == 12 ? new DateTime(year + 1, 1, 1) : new DateTime(year, month + 1, 1);
             var thisMonth = new DateTime(year, month, 1);
@@ -139,6 +131,62 @@ namespace ZBBRA.Business
         }
 
         /// <summary>
+        /// Retrieves the budget for a given month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
+        public async Task<BudgetOverviewModel> GetBudgetOverviewForMonth(int month, int year)
+        {
+            VerifyMonthAndYear(month, year);
+            
+            var nextMonth = month == 12 ? new DateTime(year + 1, 1, 1) : new DateTime(year, month + 1, 1);
+            var thisMonth = new DateTime(year, month, 1);
+            
+            var budgeted = await _context.BudgetEntry
+                .Where(be => (be.Month == month && be.Year == year))
+                .SumAsync(be => be.BudgetEntryAmount);
+
+            var spent = await _context.Transaction
+                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth)
+                .SumAsync(t => t.ExpenseAmount);
+            
+            var income = await _context.Transaction
+                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth)
+                .SumAsync(t => t.IncomeAmount);
+            
+            var totalIncome = await _context.Transaction
+                .Where(t => t.TransactionDate < nextMonth)
+                .SumAsync(t => t.IncomeAmount);
+            
+            var totalBudgeted = await _context.BudgetEntry
+                .Where(be => (be.Month <= month && be.Year == year) || be.Year < year)
+                .SumAsync(be => be.BudgetEntryAmount);
+
+            return new BudgetOverviewModel()
+            {
+                Budgeted = budgeted,
+                Spent = spent,
+                Income = income,
+                ToBeBudgeted = totalIncome - totalBudgeted
+            };
+        }
+
+        private static void VerifyMonthAndYear(int month, int year)
+        {
+            if (month < 1 || month > 12)
+            {
+                throw new HttpRequestException("Invalid month");
+            }
+            
+            if (year < 1000 || year > 9999)
+            {
+                throw new HttpRequestException("Invalid year");
+            }
+        }
+
+        /// <summary>
         /// Initializes default budget for a given month
         /// </summary>
         /// <param name="month"></param>
@@ -147,15 +195,7 @@ namespace ZBBRA.Business
         /// <exception cref="HttpRequestException"></exception>
         public async Task InitializeBudgetMonth(int month, int year)
         {
-            if (month < 1 || month > 12)
-            {
-                throw new HttpRequestException("Invald month");
-            }
-            
-            if (year < 1000 || year > 9999)
-            {
-                throw new HttpRequestException("Invald year");
-            }
+            VerifyMonthAndYear(month, year);
 
             var categoriesWithoutEntries = await _context.BudgetCategory
                 .AsNoTracking()

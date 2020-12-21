@@ -53,6 +53,8 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategoryId))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntryAmount))
                 .ForAllOtherMembers(act => act.Ignore());
+
+            CreateMap<BudgetOverviewModel, BudgetOverviewDTO>();
         }
     }
 }

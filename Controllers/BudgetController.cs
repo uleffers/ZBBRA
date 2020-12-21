@@ -89,5 +89,22 @@ namespace ZBBRA.Controllers
             return budgetEntryDTOs;
 
         }
+        
+        /// <summary>
+        /// Retrieves budget overview for a given month
+        /// </summary>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        [HttpGet("budget/overview")]
+        public async Task<BudgetOverviewDTO> GetBudgetOverviewForMonth(int month, int year)
+        {
+            var budgetOverviewModel = await _budgetManager.GetBudgetOverviewForMonth(month, year);
+
+            var budgetOverviewDTO = _mapper.Map<BudgetOverviewDTO>(budgetOverviewModel);
+
+            return budgetOverviewDTO;
+
+        }
     }
 }

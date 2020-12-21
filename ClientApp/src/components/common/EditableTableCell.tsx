@@ -41,7 +41,12 @@ const EditableTableCell: React.FC<EditableTableCellProps> = (props: EditableTabl
         case "select":
         {
             inputNode = (
-                <Select allowClear={true}>
+                <Select 
+                    allowClear={true} 
+                    showSearch={true} 
+                    filterOption={(input, option) =>
+                        option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }>
                     {props.selectOptions}
                 </Select>)
             break;

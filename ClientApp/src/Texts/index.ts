@@ -23,7 +23,7 @@ const transactionPage = {
 const budgetPage = {
     date: "Date",
     rollingBudget: "Previously budgeted",
-    budgetted: "Budgeted",
+    budgeted: "Budgeted",
     spent: "Spent",
     category: "Category",
     result: "Remaining",
@@ -32,6 +32,11 @@ const budgetPage = {
     overview: "Overview",
     toBudget: "To budget",
     income: "Income",
+}
+
+const visualisationPage = {
+    date: "Date",
+    title: "Visualizations",
 }
 
 const months = {
@@ -54,6 +59,7 @@ const dk = {
     header,
     budgetPage,
     transactionPage,
-    months
+    months,
+    visualisationPage,
 }
 export default dk;

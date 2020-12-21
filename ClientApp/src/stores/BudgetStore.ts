@@ -1,22 +1,22 @@
 import {action, decorate, observable, runInAction} from 'mobx';
 
 import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingStore";
-import {BudgetApi, BudgetGroupDTO, CreateBudgetEntryDTO, TransactionApi} from "swagger-api";
+import {BudgetApi, BudgetGroupDTO, BudgetOverviewDTO, CreateBudgetEntryDTO, TransactionApi} from "swagger-api";
 
 export class BudgetStore extends ArrayFetchingStore<BudgetGroupDTO> {
     budgetApi: BudgetApi = new BudgetApi(undefined, undefined, this.rootStore.axiosInstance);
-    transactionApi: TransactionApi = new TransactionApi(undefined, undefined, this.rootStore.axiosInstance);
     
-    income: number = 0;
+    overview?: BudgetOverviewDTO;
     
     getBudgetInMonth = async (month: number, year: number) => {
         const promise = this.budgetApi.apiBudgetGetGet(month, year, undefined);
         await this.callPromise(promise, false);
-        const promiseIncome = this.transactionApi.apiTransactionsGetincomeinmonthGet(month, year, undefined);
         
-        await promiseIncome.then(result => {
+        const promiseOverview = this.budgetApi.apiBudgetOverviewGet(month, year, undefined);
+        
+        await promiseOverview.then(result => {
             runInAction(() => {
-                this.income = result.data;
+                this.overview = result.data;
             });
         });
     }
@@ -43,5 +43,5 @@ decorate(BudgetStore, {
     addBudgetEntry: action,
     updateBudgetEntry: action,
     initializeBudgetEntries: action,
-    income: observable,
+    overview: observable,
 });

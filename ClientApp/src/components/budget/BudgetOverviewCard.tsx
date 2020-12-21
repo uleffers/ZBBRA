@@ -1,28 +1,22 @@
-import {BudgetEntrySpentDTO, BudgetGroupDTO} from "swagger-api";
+import {BudgetEntrySpentDTO, BudgetGroupDTO, BudgetOverviewDTO} from "swagger-api";
 import {Card} from "antd";
 import React from "react";
 import text from "../../Texts";
 
 export interface BudgetOverviewCardProps {
-    budgetEntries: Array<BudgetGroupDTO>;
-    income: number;
+    budgetOverview?: BudgetOverviewDTO;
 }
 
 const BudgetOverviewCard: React.FC<BudgetOverviewCardProps> = (props: BudgetOverviewCardProps) => {
     const texts = text.budgetPage;
 
-
-    const budgeted = props.budgetEntries?.reduce( function(cnt,o){ return cnt + (o.budgetEntryAmount || 0); }, 0);
-    const spent = props.budgetEntries?.reduce( function(cnt,o){ return cnt + (o.transactionSum || 0); }, 0);
-
-    const toBudget = props.income - budgeted;
     return (
         <Card title={texts.overview}>
             <span>
-                <p style={{color: (toBudget < 0 ? "red" : "green")}}><b>{texts.toBudget}:</b> {toBudget} kr.</p><br/>
-                <p><b>{texts.income}:</b> {props.income} kr.</p>
-                <p><b>{texts.spent}:</b> {spent} kr.</p>
-                <p><b>{texts.budgetted}:</b> {budgeted} kr.</p>
+                <p style={{color: ((props.budgetOverview?.toBeBudgeted || 0 ) < 0 ? "red" : "green")}}><b>{texts.toBudget}:</b> {(props.budgetOverview?.toBeBudgeted || 0 )} kr.</p><br/>
+                <p><b>{texts.income}:</b> {props.budgetOverview?.income || 0} kr.</p>
+                <p><b>{texts.spent}:</b> {props.budgetOverview?.spent || 0} kr.</p>
+                <p><b>{texts.budgeted}:</b> {props.budgetOverview?.budgeted || 0} kr.</p>
             </span>
         </Card>
     )

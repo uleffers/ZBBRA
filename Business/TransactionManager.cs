@@ -161,7 +161,7 @@ namespace ZBBRA.Business
                     BudgetCategoryId = x.BudgetCategoryId,
                     AccountId = x.AccountId
                 })
-                .OrderBy(x => x.TransactionDate)
+                .OrderByDescending(x => x.TransactionDate)
                 .ToListAsync();
 
             return returnTransaction;

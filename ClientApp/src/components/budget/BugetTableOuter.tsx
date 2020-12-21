@@ -38,7 +38,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             align:"right" as "right"
         },
         {
-            title: texts.budgetted,
+            title: texts.budgeted,
             dataIndex: 'budgetEntryAmount',
             key: 'budgetEntryAmount' + tableName,
             width: widthNumbers,
@@ -58,7 +58,7 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             dataIndex: 'remaining',
             key: 'remaining' + tableName,
             width: widthNumbers,
-            render: (record:any) => <b>{record} kr.</b>,
+            render: (record:any) => <b style={{color: ((record || 0 ) < 0 ? "red" : "black")}}>{record} kr.</b>,
             align:"right" as "right"
         },
         {
