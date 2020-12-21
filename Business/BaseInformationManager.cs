@@ -58,7 +58,8 @@ namespace ZBBRA.Business
                 .Select(x => new Account()
                 {
                     AccountId = x.AccountId,
-                    AccountName = x.AccountName
+                    AccountName = x.AccountName,
+                    TrackingAccount = x.TrackingAccount
                 })
                 .OrderBy(x => x.AccountName)
                 .ToListAsync();

@@ -176,10 +176,33 @@ namespace Database.Context
                 new Account()
                 {
                     AccountName = "Løn",
+                    TrackingAccount = false,
+                    
                 },
                 new Account()
                 {
                     AccountName = "Opsparing",
+                    TrackingAccount = false,
+                },
+                new Account()
+                {
+                    AccountName = "Nordnet, Frie midler",
+                    TrackingAccount = true,
+                },
+                new Account()
+                {
+                    AccountName = "Nordnet, Aldersopsparing",
+                    TrackingAccount = true,
+                },
+                new Account()
+                {
+                    AccountName = "Nordnet, Ratepensions",
+                    TrackingAccount = true,
+                },
+                new Account()
+                {
+                    AccountName = "Saxo, Aktieopsparing",
+                    TrackingAccount = true,
                 }
             };
             

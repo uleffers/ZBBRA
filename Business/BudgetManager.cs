@@ -102,12 +102,13 @@ namespace ZBBRA.Business
                         DefaultAmount = x.DefaultAmount
                     },
                     TransactionSum = x.Transactions
-                        .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth)
+                        .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth && !t.Account.TrackingAccount)
                         .Sum(t => t.ExpenseAmount - t.IncomeAmount),
                     PreviousBudgetEntrySum = (x.BudgetEntries
                         .Where(be => (be.Month < month && be.Year == year) || (be.Year < year))
                         .Sum(be => be.BudgetEntryAmount)
-                    - x.Transactions.Where(t => t.TransactionDate < thisMonth).Sum(t => t.ExpenseAmount - t.IncomeAmount))
+                    - x.Transactions.Where(t => t.TransactionDate < thisMonth && !t.Account.TrackingAccount)
+                        .Sum(t => t.ExpenseAmount - t.IncomeAmount))
                 })
                 .ToListAsync();
 
@@ -149,15 +150,15 @@ namespace ZBBRA.Business
                 .SumAsync(be => be.BudgetEntryAmount);
 
             var spent = await _context.Transaction
-                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth)
+                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth && !t.Account.TrackingAccount)
                 .SumAsync(t => t.ExpenseAmount);
             
             var income = await _context.Transaction
-                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth)
+                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth && !t.Account.TrackingAccount)
                 .SumAsync(t => t.IncomeAmount);
             
             var totalIncome = await _context.Transaction
-                .Where(t => t.TransactionDate < nextMonth)
+                .Where(t => t.TransactionDate < nextMonth && !t.Account.TrackingAccount)
                 .SumAsync(t => t.IncomeAmount);
             
             var totalBudgeted = await _context.BudgetEntry
