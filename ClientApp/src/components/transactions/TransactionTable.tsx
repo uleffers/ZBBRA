@@ -52,6 +52,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 title: texts.date,
                 editing: props.isEditing(record.transactionId),
                 autoFocus: true,
+                onPressEnter: props.onEditSave,
             }),
             sorter: (a:TransactionDTO, b:TransactionDTO) => moment(a.transactionDate).unix() - moment(b.transactionDate).unix(),
         },
@@ -69,6 +70,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 dataIndex: 'expenseAmount',
                 title: texts.expense,
                 editing: props.isEditing(record.transactionId),
+                onPressEnter: props.onEditSave,
             }),
             sorter: (a:TransactionDTO, b:TransactionDTO) => (a.expenseAmount === 0 ? -Number.MAX_VALUE : (a.expenseAmount || -Number.MAX_VALUE)) 
                 - (b.expenseAmount === 0 ? -Number.MAX_VALUE : (b.expenseAmount || -Number.MAX_VALUE)),
@@ -87,6 +89,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 dataIndex: 'incomeAmount',
                 title: texts.income,
                 editing: props.isEditing(record.transactionId),
+                onPressEnter: props.onEditSave,
             }),
             sorter: (a:TransactionDTO, b:TransactionDTO) => (a.incomeAmount === 0 ? -Number.MAX_VALUE : (a.incomeAmount || -Number.MAX_VALUE)) 
                 - (b.incomeAmount === 0 ? -Number.MAX_VALUE : (b.incomeAmount || -Number.MAX_VALUE)),
@@ -137,6 +140,7 @@ const TransactionTable: React.FC<TransactionTableProps> = (props: TransactionTab
                 dataIndex: 'transactionNote',
                 title: texts.note,
                 editing: props.isEditing(record.transactionId),
+                onPressEnter: props.onEditSave,
             }),
             filters: Array.from(
                 new Set(props.transactionResults.map(transaction => transaction.transactionNote))

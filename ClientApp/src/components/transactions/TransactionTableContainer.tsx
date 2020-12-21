@@ -65,7 +65,6 @@ export const TransactionTableContainer: React.FC = observer(() => {
     };
 
     const onCancelEdit = () => {
-        console.log("onCancelEdit")
         setEditingKey('');
         setNewTransaction('')
     };
@@ -83,23 +82,28 @@ export const TransactionTableContainer: React.FC = observer(() => {
     }
     
     const onEditSave = async (e: TransactionDTO) => {
-        console.log("onEditSave")
         try {
             const row = await form.validateFields();
             
-            let currentItem = store.payload.find((transaction) => transaction.transactionId == e.transactionId);
-            
+            let currentItem = store.payload.find((transaction) => transaction.transactionId == editingKey);
+            const incomeAmount = (form.getFieldValue('incomeAmount') !== null && form.getFieldValue('incomeAmount') !== "")
+                ? form.getFieldValue('incomeAmount')
+                : 0;
+
+            const expenseAmount = (form.getFieldValue('expenseAmount') !== null && form.getFieldValue('expenseAmount') !== "")
+                ? form.getFieldValue('expenseAmount')
+                : 0;
             if (currentItem){
                 let dateString = form.getFieldValue('transactionDate');
                 let date = dateString.split('-');
 
                 const returnTransaction: TransactionDTO = {
                     transactionId: currentItem.transactionId,
-                    budgetCategoryId: form.getFieldValue('budgetCategoryId'),
+                    budgetCategoryId: (form.getFieldValue('budgetCategoryId') !== '' ? form.getFieldValue('budgetCategoryId') : null),
                     accountId: form.getFieldValue('accountId'),
                     transactionNote: form.getFieldValue('transactionNote'),
-                    expenseAmount: form.getFieldValue('expenseAmount'),
-                    incomeAmount: form.getFieldValue('incomeAmount'),
+                    expenseAmount: expenseAmount,
+                    incomeAmount: incomeAmount,
                     transactionDate: new Date(Date.UTC(parseInt(date[2]) , parseInt(date[1]) - 1, parseInt(date[0])))
                 };
                 
@@ -109,11 +113,11 @@ export const TransactionTableContainer: React.FC = observer(() => {
                 let date = dateString.split('-');
 
                 const returnTransaction: CreateTransactionDTO = {
-                    budgetCategoryId: (form.getFieldValue('budgetCategoryId') !== '' ? form.getFieldValue('budgetCategoryId') : undefined),
+                    budgetCategoryId: (form.getFieldValue('budgetCategoryId') !== '' ? form.getFieldValue('budgetCategoryId') : null),
                     accountId: form.getFieldValue('accountId'),
                     transactionNote: form.getFieldValue('transactionNote'),
-                    expenseAmount: form.getFieldValue('expenseAmount'),
-                    incomeAmount: form.getFieldValue('incomeAmount'),
+                    expenseAmount: expenseAmount,
+                    incomeAmount: incomeAmount,
                     transactionDate: new Date(Date.UTC(parseInt(date[2]) , parseInt(date[1]) - 1, parseInt(date[0])))
                 };
 
