@@ -20,19 +20,16 @@ namespace ZBBRA.Controllers
     [Produces("application/json")]
     public class BudgetController : ControllerBase
     {
-        private readonly ZbbraDBContext _context;
         private readonly IBudgetManager _budgetManager;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// ctor
         /// </summary>
-        /// <param name="context"></param>
         /// <param name="budgetManager"></param>
         /// <param name="mapper"></param>
-        public BudgetController(ZbbraDBContext context, IBudgetManager budgetManager, IMapper mapper)
+        public BudgetController(IBudgetManager budgetManager, IMapper mapper)
         {
-            _context = context;
             _budgetManager = budgetManager;
             _mapper = mapper;
         }

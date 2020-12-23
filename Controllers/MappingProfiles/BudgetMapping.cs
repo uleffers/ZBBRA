@@ -55,6 +55,7 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForAllOtherMembers(act => act.Ignore());
 
             CreateMap<BudgetOverviewModel, BudgetOverviewDTO>();
+            
         }
     }
 }

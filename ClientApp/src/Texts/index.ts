@@ -6,7 +6,7 @@ const header = {
     headerText: 'ZBBRA',
     transactionTableMenu: 'Transactions',
     budgetTableMenu: 'Budget',
-    visualizationsMenu: 'Visualizations'
+    visualizationsMenu: 'Dashboard'
 };
 
 const transactionPage = {
@@ -36,7 +36,12 @@ const budgetPage = {
 
 const visualisationPage = {
     date: "Date",
-    title: "Visualizations",
+    title: "Dashboard",
+    cashflowCard: "Cashflow",
+    income: "Income",
+    totalExpense: "Expenses",
+    otherCategories: "Other categories",
+    
 }
 
 const months = {

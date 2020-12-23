@@ -1,21 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
 import text from "../../Texts";
-import {Button, Col, Form, InputNumber, Row, Select} from "antd";
-import {BudgetStore} from "../../stores/BudgetStore";
+import {Col, InputNumber, Row, Select} from "antd";
 import {useStore} from "../../Hooks/stores";
-import {FileAddOutlined} from "@ant-design/icons";
-import BudgetTableOuter from "../budget/BugetTableOuter";
-import BudgetOverviewCard from "../budget/BudgetOverviewCard";
+import {TransactionStore} from "../../stores/TransactionStore";
 
 const DashboardContainer: React.FC = () => {
-    const texts = text.visualisationPage;
 
     const [monthState, setMonthState] = useState(0);
     const [yearState, setYearState] = useState(0);
 
     const { Option } = Select;
-    // const store: BudgetStore = useStore(BudgetStore);
+    const store: TransactionStore = useStore(TransactionStore);
 
     useEffect(() => {
         let d = new Date();
@@ -26,14 +22,16 @@ const DashboardContainer: React.FC = () => {
     const onMonthChange = async (e: any) => {
         if (e !== monthState) {
             setMonthState(e);
-            // await store.getBudgetInMonth(e, yearState === 0 ? new Date().getFullYear() : yearState);
+            store.getTransactionsInMonth(e, yearState === 0 ? new Date().getFullYear() : yearState);
+            store.getIncomeInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
         }
     }
 
     const onYearChange = async (e: any) => {
         if (e !== yearState && e >= 1000 && e <= 9999) {
             setYearState(e);
-            // await store.getBudgetInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
+            store.getTransactionsInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
+            store.getIncomeInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
         }
     }
     const generateOptions = () => {
@@ -44,7 +42,7 @@ const DashboardContainer: React.FC = () => {
     }
     
     return (
-        true ? // !!store.payload ?
+        !!store.payload ?
             (
                 <>
                     <Row align="bottom" style={{marginBottom:8}} gutter={8}>

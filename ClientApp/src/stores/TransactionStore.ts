@@ -1,10 +1,13 @@
-﻿import { action, decorate } from 'mobx';
+﻿import {action, decorate, observable, runInAction} from 'mobx';
 
 import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingStore";
-import {AccountDTO, Configuration, CreateTransactionDTO, TransactionApi, TransactionDTO} from "swagger-api";
+import {
+    CreateTransactionDTO,
+    TransactionApi,
+    TransactionDTO
+} from "swagger-api";
 import {AccountStore} from "./AccountStore";
 import {BudgetCategoryStore} from "./BudgetCategoryStore";
-import {useState} from "react";
 
 export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
     
@@ -13,14 +16,25 @@ export class TransactionStore extends ArrayFetchingStore<TransactionDTO> {
     accountInformationStore: AccountStore = new AccountStore(this.rootStore);
     budgetCategoryStore: BudgetCategoryStore = new BudgetCategoryStore(this.rootStore);
 
+    income?: number = 0;
+
     getTransactionsInInterval = (dateFrom:Date, dateTo:Date) => {
         const promise = this.transactionApi.apiTransactionsGettransactionsintervalGet(dateFrom, dateTo, undefined);
-        const _ignore =this.callPromise(promise, false);
+        const _ignore = this.callPromise(promise, false);
     }
     
     getTransactionsInMonth = (month:number, year:number) => {
         const promise = this.transactionApi.apiTransactionsGettransactionsinmonthGet(month, year, undefined);
         const _ignore = this.callPromise(promise, false);
+    }
+    
+    getIncomeInMonth = (month: number, year: number) => {
+        const promise = this.transactionApi.apiTransactionsGetincomeinmonthGet(month, year);
+        promise.then(result => {
+            runInAction(() => {
+                this.income = result.data;
+            });
+        });
     }
     
     updateTransaction = async (transactionDTO: TransactionDTO) => {
@@ -45,4 +59,5 @@ decorate(TransactionStore, {
     updateTransaction: action,
     addTransaction: action,
     deleteTransaction: action,
+    income: observable,
 });

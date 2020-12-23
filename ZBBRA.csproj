@@ -120,6 +120,7 @@
       <TypeScriptCompile Include="ClientApp\src\components\transactions\TransactionPage.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\transactions\TransactionTable.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\transactions\TransactionTableContainer.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\components\visualizations\CashflowCard.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\visualizations\DashboardContainer.tsx" />
       <TypeScriptCompile Include="ClientApp\src\components\visualizations\VisualizationPage.tsx" />
       <TypeScriptCompile Include="ClientApp\src\global.d.ts" />
