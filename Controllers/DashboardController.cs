@@ -22,11 +22,11 @@ namespace ZBBRA.Controllers
     {
         private readonly IDashboardManager _dashboardManager;
         private readonly IMapper _mapper;
-        
+
         /// <summary>
         /// ctor
         /// </summary>
-        /// <param name="budgetManager"></param>
+        /// <param name="dashboardManager"></param>
         /// <param name="mapper"></param>
         public DashboardController(IDashboardManager dashboardManager, IMapper mapper)
         {

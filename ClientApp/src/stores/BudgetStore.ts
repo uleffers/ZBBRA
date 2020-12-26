@@ -1,9 +1,9 @@
 import {action, decorate, observable, runInAction} from 'mobx';
 
 import { ArrayFetchingStore } from "./baseStores/fetchingStores/ArrayFetchingStore";
-import {BudgetApi, BudgetGroupDTO, BudgetOverviewDTO, CreateBudgetEntryDTO, TransactionApi} from "swagger-api";
+import {BudgetApi, BudgetViewCategoryGroupDTO, BudgetOverviewDTO, CreateBudgetEntryDTO} from "swagger-api";
 
-export class BudgetStore extends ArrayFetchingStore<BudgetGroupDTO> {
+export class BudgetStore extends ArrayFetchingStore<BudgetViewCategoryGroupDTO> {
     budgetApi: BudgetApi = new BudgetApi(undefined, undefined, this.rootStore.axiosInstance);
     
     overview?: BudgetOverviewDTO;

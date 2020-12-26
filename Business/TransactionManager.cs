@@ -93,43 +93,6 @@ namespace ZBBRA.Business
         }
 
         /// <summary>
-        /// Generates testdata for a given month
-        /// </summary>
-        /// <param name="month"></param>
-        /// <param name="year"></param>
-        /// <param name="numberOfTransactions"></param>
-        /// <returns></returns>
-        public async Task GenerateTestdata(int month, int year, int numberOfTransactions)
-        {
-            var categories = await _context.BudgetCategory.Select(x => x.BudgetCategoryId).ToListAsync();
-            var accounts = await _context.Account.Select(x => x.AccountId).ToListAsync();
-
-            var notes = new List<string>()
-            {
-                "Spisebord", "Kaffe", "Netflix", "Avis", "Fælles", "Mad", "Restaurant", "Deo", "Sokker"
-
-            };
-            
-            var transactions = new List<Transaction>();
-            Random random = new Random();
-
-            for (int i = 0; i < numberOfTransactions; i++)
-            {
-                transactions.Add(new Transaction()
-                {
-                    ExpenseAmount = random.Next(- 5000, 5000),
-                    BudgetCategoryId = categories[random.Next(categories.Count)],
-                    AccountId = accounts[random.Next(accounts.Count)],
-                    TransactionNote = notes[random.Next(notes.Count)],
-                    TransactionDate = new DateTime(year, month, random.Next(1, month == 2 ? 28 : 30))
-                });
-            }
-
-            _context.Transaction.AddRange(transactions);
-            await _context.SaveChangesAsync();
-        }
-
-        /// <summary>
         /// Gets a list of transaction for a given month
         /// </summary>
         /// <param name="month"></param>
@@ -138,15 +101,7 @@ namespace ZBBRA.Business
         /// <exception cref="HttpRequestException"></exception>
         public async Task<List<Transaction>> GetTransactions(int month, int year)
         {
-            if (month < 1 || month > 12)
-            {
-                throw new HttpRequestException("Invald month");
-            }
-            
-            if (year < 1000 || year > 9999)
-            {
-                throw new HttpRequestException("Invald year");
-            }
+            ManagerHelper.VerifyMonthAndYear(month, year);
 
             var returnTransaction = await _context.Transaction
                 .AsNoTracking()
@@ -176,15 +131,7 @@ namespace ZBBRA.Business
         /// <exception cref="HttpRequestException"></exception>
         public async Task<decimal> GetIncome(int month, int year)
         {
-            if (month < 1 || month > 12)
-            {
-                throw new HttpRequestException("Invald month");
-            }
-            
-            if (year < 1000 || year > 9999)
-            {
-                throw new HttpRequestException("Invald year");
-            }
+            ManagerHelper.VerifyMonthAndYear(month, year);
 
             var income = await _context.Transaction
                 .AsNoTracking()

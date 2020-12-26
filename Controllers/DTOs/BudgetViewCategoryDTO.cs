@@ -2,7 +2,7 @@ using System;
 
 namespace ZBBRA.Controllers.DTOs
 {
-    public class BudgetEntrySpentDTO
+    public class BudgetViewCategoryDTO
     {
         /// <summary>
         /// EntryId

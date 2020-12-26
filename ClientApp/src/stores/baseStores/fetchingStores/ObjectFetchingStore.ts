@@ -1,16 +1,15 @@
 import { AxiosPromise } from 'axios';
 import { action, decorate, observable, runInAction } from 'mobx';
 
-import { ErrorAndLoadingBindingStore } from '../ErrorAndLoadingBindingStore';
+import {BaseStore} from "../BaseStore";
 
-export class ObjectFetchingStore<T> extends ErrorAndLoadingBindingStore {
+export class ObjectFetchingStore<T> extends BaseStore {
     payload: T | undefined;
 
     // code duplicate with ArrayFetchingStore
     // duplication made on purpose due to TS problems with resolving generic types
     // noinspection DuplicatedCode
-    public callPromise = async (promise: AxiosPromise<T>, loader: boolean = false, currentWindow?: Window) => {
-        this.bindLoadingAndErrorHandling(promise, loader, currentWindow);
+    public callPromise = async (promise: AxiosPromise<T>) => {
         try {
             return await promise.then(result => {
                 runInAction(() => {

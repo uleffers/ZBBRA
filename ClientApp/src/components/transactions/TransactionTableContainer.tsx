@@ -166,6 +166,8 @@ export const TransactionTableContainer: React.FC = observer(() => {
                             onChange={onYearChange} 
                             defaultValue={new Date().getFullYear()}
                             style={{width:"100%"}}
+                            min={1000}
+                            max={9999}
                         />
                     </Col>
                     <Col span={2} offset={17}>

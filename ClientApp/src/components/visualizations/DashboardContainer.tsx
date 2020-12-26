@@ -1,39 +1,39 @@
 import React, {useEffect, useState} from 'react';
-import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
+import {DashboardStore} from "../../stores/DashboardStore";
+import CashflowCard from "./CashflowCard";
 import text from "../../Texts";
 import {Col, InputNumber, Row, Select} from "antd";
 import {useStore} from "../../Hooks/stores";
-import {TransactionStore} from "../../stores/TransactionStore";
+import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
 
 const DashboardContainer: React.FC = () => {
-
     const [monthState, setMonthState] = useState(0);
     const [yearState, setYearState] = useState(0);
 
     const { Option } = Select;
-    const store: TransactionStore = useStore(TransactionStore);
+    const store: DashboardStore = useStore(DashboardStore);
 
     useEffect(() => {
         let d = new Date();
         setYearState(new Date().getFullYear());
         setMonthState(new Date().getMonth() + 1)
+        store.getCashflow(monthState === 0 ? new Date().getMonth() + 1 : monthState, yearState === 0 ? new Date().getFullYear() : yearState);
     }, []);
-
-    const onMonthChange = async (e: any) => {
+    
+    const onMonthChange = (e: any) => {
         if (e !== monthState) {
             setMonthState(e);
-            store.getTransactionsInMonth(e, yearState === 0 ? new Date().getFullYear() : yearState);
-            store.getIncomeInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
+            store.getCashflow(e, yearState === 0 ? new Date().getFullYear() : yearState);
         }
     }
 
-    const onYearChange = async (e: any) => {
+    const onYearChange = (e: any) => {
         if (e !== yearState && e >= 1000 && e <= 9999) {
             setYearState(e);
-            store.getTransactionsInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
-            store.getIncomeInMonth(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
+            store.getCashflow(monthState === 0 ? new Date().getMonth() + 1 : monthState, e);
         }
     }
+    
     const generateOptions = () => {
         let months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         return months.map(function (month, i) {
@@ -60,12 +60,12 @@ const DashboardContainer: React.FC = () => {
                                 onChange={onYearChange}
                                 defaultValue={new Date().getFullYear()}
                                 style={{width:"100%"}}
+                                min={1000}
+                                max={9999}
                             />
                         </Col>
                     </Row>
-                    <Row align={"top"} gutter={8} style={{backgroundColor:"green"}}>
-                            <p>filler</p>
-                    </Row>
+                    <CashflowCard CashflowOverview={store.payload} Month={monthState} Year={yearState}/>
                 </>
             )
             : <React.Fragment />

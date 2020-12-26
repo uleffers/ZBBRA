@@ -70,18 +70,6 @@ namespace ZBBRA.Controllers
         {
             await _transactionManager.DeleteTransaction(transactionId);
         }
-        /// <summary>
-        /// Generates new transactions to the DB
-        /// </summary>
-        /// <param name="month"></param>
-        /// <param name="year"></param>
-        /// <param name="numberOfTransactions"></param>
-        /// <returns></returns>
-        [HttpPost("transactions/generatedata")]
-        public async Task GenerateTestdata(int month, int year, int numberOfTransactions)
-        {
-            await _transactionManager.GenerateTestdata(month, year, numberOfTransactions);
-        }
 
         /// <summary>
         /// Fetches all transactions in a given interval

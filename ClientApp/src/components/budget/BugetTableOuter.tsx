@@ -1,11 +1,11 @@
 import React from "react";
-import {BudgetEntrySpentDTO, BudgetGroupDTO, TransactionDTO} from "swagger-api";
+import {BudgetViewCategoryDTO, BudgetViewCategoryGroupDTO} from "swagger-api";
 import text from "../../Texts";
 import {Table} from "antd";
 import BudgetTableInner from "./BudgetTableInner";
 
 export interface BudgetTableOuterProps {
-    budgetEntries: Array<BudgetGroupDTO>;
+    budgetEntries: Array<BudgetViewCategoryGroupDTO>;
     form:  any;
     isEditing: Function;
     onEdit: Function;
@@ -85,9 +85,9 @@ const BudgetTableOuter: React.FC<BudgetTableOuterProps> = (props: BudgetTableOut
             bordered={true}
             pagination={false}
             expandable={{
-                expandedRowRender: (record:BudgetGroupDTO) => (
+                expandedRowRender: (record:BudgetViewCategoryGroupDTO) => (
                     <BudgetTableInner 
-                        budgetEntries={record.budgetEntrySpentDTOs || new Array<BudgetEntrySpentDTO>()}
+                        budgetEntries={record.budgetEntrySpentDTOs || new Array<BudgetViewCategoryDTO>()}
                         form={props.form}
                         isEditing={props.isEditing}
                         onEdit={props.onEdit}

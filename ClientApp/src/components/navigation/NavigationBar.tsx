@@ -1,7 +1,6 @@
 ﻿import { Layout, Menu } from 'antd';
 import React from 'react';
 
-import LogoBar from "../logoBar/LogoBar";
 import TransactionTable from "../transactions/TransactionTable";
 import text from "../../Texts";
 import logo from "../../Assets/logo.png";

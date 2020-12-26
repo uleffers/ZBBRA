@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import {Button, Form, Popconfirm, Select, Table} from "antd";
+import {Button, Form, Select, Table} from "antd";
 import text from "../../Texts";
 import {AccountDTO, BudgetCategoryDTO, TransactionDTO} from "swagger-api";
 import formatDate from "../../Utils/formatDate";

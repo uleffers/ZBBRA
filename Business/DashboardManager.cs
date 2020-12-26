@@ -25,18 +25,7 @@ namespace ZBBRA.Business
             _context = context;
         }
         
-        private static void VerifyMonthAndYear(int month, int year)
-        {
-            if (month < 1 || month > 12)
-            {
-                throw new HttpRequestException("Invalid month");
-            }
-            
-            if (year < 1000 || year > 9999)
-            {
-                throw new HttpRequestException("Invalid year");
-            }
-        }
+        
         
         /// <summary>
         /// Gets the Cashflow overview for a given month
@@ -46,31 +35,40 @@ namespace ZBBRA.Business
         /// <returns></returns>
         public async Task<CashflowOverviewModel> GetCashflowOverview(int month, int year)
         {
-            VerifyMonthAndYear(month, year);
-            var nextMonth = month == 12 ? new DateTime(year + 1, 1, 1) : new DateTime(year, month + 1, 1);
-            var thisMonth = new DateTime(year, month, 1);
+            ManagerHelper.VerifyMonthAndYear(month, year);
+            var nextMonth = ManagerHelper.GetNextMonth(month, year);
+            var thisMonth = ManagerHelper.GetThisMonth(month, year);
+            
             var overview = new CashflowOverviewModel();
             overview.IncomeTotal = await _context.Transaction
-                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth &&
-                            !t.Account.TrackingAccount)
+                .Where(t => t.TransactionDate < nextMonth 
+                            && t.TransactionDate >= thisMonth
+                            && !t.Account.TrackingAccount)
                 .SumAsync(x => x.IncomeAmount);
             
             var allTransactionsInMonth = await _context.Transaction
-                .Where(t => t.TransactionDate < nextMonth && t.TransactionDate >= thisMonth &&
-                            !t.Account.TrackingAccount)
+                .Where(t => t.TransactionDate < nextMonth 
+                            && t.TransactionDate >= thisMonth 
+                            && t.ExpenseAmount != 0
+                            && t.BudgetCategory != null
+                            && !t.Account.TrackingAccount)
                 .Select(t => new Transaction()
                 {
                     ExpenseAmount = t.ExpenseAmount,
                     BudgetCategory = new BudgetCategory()
                     {
                         CategoryName = t.BudgetCategory == null ? "" : t.BudgetCategory.CategoryName,
+                        CategoryGroup = new CategoryGroup()
+                        {
+                            CategoryGroupName = t.BudgetCategory.CategoryGroup.CategoryGroupName
+                        }
                     }
                 })
                 .ToListAsync();
 
             overview.ExpenseTotal = allTransactionsInMonth.Sum(x => x.ExpenseAmount);
             
-            foreach (var category in allTransactionsInMonth.GroupBy(x => x.BudgetCategory.CategoryName))
+            foreach (var category in allTransactionsInMonth.GroupBy(x => x.BudgetCategory?.CategoryName))
             {
                 overview.CashflowCategories.Add(
                     new KeyValuePair<string, decimal>(
@@ -79,9 +77,24 @@ namespace ZBBRA.Business
                     )
                 );
             }
+            
+            foreach (var group in allTransactionsInMonth.GroupBy(x => x.BudgetCategory?.CategoryGroup.CategoryGroupName))
+            {
+                overview.CashflowGroups.Add(
+                    new KeyValuePair<string, decimal>(
+                        group.Key, 
+                        group.Sum(x => x.ExpenseAmount)
+                    )
+                );
+            }
 
             overview.CashflowCategories = overview
                 .CashflowCategories
+                .OrderByDescending(x => x.Value)
+                .ToList();
+            
+            overview.CashflowGroups = overview
+                .CashflowGroups
                 .OrderByDescending(x => x.Value)
                 .ToList();
 

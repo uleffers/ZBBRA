@@ -3,7 +3,7 @@ using Database.Models;
 
 namespace ZBBRA.Business.Models
 {
-    public class BudgetEntrySpentModel
+    public class BudgetViewCategoryModel
     {
         public BudgetEntry BudgetEntry { get; set; }
 

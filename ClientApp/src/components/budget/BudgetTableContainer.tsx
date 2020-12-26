@@ -7,16 +7,14 @@ import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
 import text from "../../Texts";
 import BudgetTableOuter from "./BugetTableOuter";
 import {
-    BudgetEntrySpentDTO,
+    BudgetViewCategoryDTO,
     CreateBudgetEntryDTO
 } from "swagger-api";
 import {EmptyGuid} from "../../Utils/EmptyGuid";
-import {FileAddOutlined, PlusOutlined} from "@ant-design/icons";
+import {FileAddOutlined} from "@ant-design/icons";
 import BudgetOverviewCard from "./BudgetOverviewCard";
 
 export const BudgetTableContainer: React.FC = observer(() => {
-    const texts = text.budgetPage;
-
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
 
@@ -67,7 +65,7 @@ export const BudgetTableContainer: React.FC = observer(() => {
         })
     }
     
-    const onEdit = (record: BudgetEntrySpentDTO) => {
+    const onEdit = (record: BudgetViewCategoryDTO) => {
         form.setFieldsValue({
             budgetEntryId:'',
             budgetEntryAmount: '',
@@ -85,7 +83,7 @@ export const BudgetTableContainer: React.FC = observer(() => {
         setEditingKey(record.budgetCategoryId ?? '');
     };
 
-        const onEditSave = async (e: BudgetEntrySpentDTO) => {
+        const onEditSave = async (e: BudgetViewCategoryDTO) => {
         console.log("onEditSave");
         try {
             const row = await form.validateFields();
@@ -147,6 +145,8 @@ export const BudgetTableContainer: React.FC = observer(() => {
                                 onChange={onYearChange}
                                 defaultValue={new Date().getFullYear()}
                                 style={{width:"100%"}}
+                                min={1000}
+                                max={9999}
                             />
                         </Col>
                         <Col span={0.5}>

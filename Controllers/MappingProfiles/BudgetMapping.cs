@@ -15,7 +15,8 @@ namespace ZBBRA.Controllers.MappingProfiles
         {
             CreateMap<BudgetCategory, BudgetCategoryDTO>();
             CreateMap<Account, AccountDTO>();
-            CreateMap<BudgetGroupModel, BudgetGroupDTO>()
+            
+            CreateMap<BudgetViewCategoryGroupModel, BudgetViewCategoryGroupDTO>()
                 .ForMember(des => des.CategoryGroupName, act => act.MapFrom(src => src.CategoryGroupName))
                 .ForMember(des => des.Remaining, act => act.MapFrom(src => src.BudgetEntrySpentModels.Sum(x => 
                     x.PreviousBudgetEntrySum + x.BudgetEntry.BudgetEntryAmount - x.TransactionSum)))
@@ -24,7 +25,7 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntrySpentModels.Sum(x => x.BudgetEntry.BudgetEntryAmount)))
                 .ForMember(des => des.BudgetEntrySpentDTOs, act => act.MapFrom(src => src.BudgetEntrySpentModels));
 
-            CreateMap<BudgetEntrySpentModel, BudgetEntrySpentDTO>()
+            CreateMap<BudgetViewCategoryModel, BudgetViewCategoryDTO>()
                 .ForMember(des => des.BudgetEntryId, act => act.MapFrom(src => src.BudgetEntry.BudgetEntryId))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntry.BudgetEntryAmount))
                 .ForMember(des => des.BudgetCategoryName, act => act.MapFrom(src => src.BudgetCategory.CategoryName))
@@ -33,9 +34,7 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.TransactionSum, act => act.MapFrom(src => src.TransactionSum))
                 .ForMember(des => des.PreviousBudgetEntrySum, act => act.MapFrom(src => src.PreviousBudgetEntrySum))
                 .ForMember(des => des.Remaining, act => act.MapFrom(src =>
-                        src.PreviousBudgetEntrySum + src.BudgetEntry.BudgetEntryAmount - src.TransactionSum
-                    )
-                );
+                        src.PreviousBudgetEntrySum + src.BudgetEntry.BudgetEntryAmount - src.TransactionSum));
             
             CreateMap<BudgetEntryDTO, BudgetEntry>()
                 .ForMember(des => des.BudgetEntryId, act => act.MapFrom(src => src.BudgetEntryId))
@@ -53,9 +52,6 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.BudgetCategoryId, act => act.MapFrom(src => src.BudgetCategoryId))
                 .ForMember(des => des.BudgetEntryAmount, act => act.MapFrom(src => src.BudgetEntryAmount))
                 .ForAllOtherMembers(act => act.Ignore());
-
-            CreateMap<BudgetOverviewModel, BudgetOverviewDTO>();
-            
         }
     }
 }

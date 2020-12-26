@@ -1,4 +1,4 @@
-import {BudgetEntrySpentDTO, BudgetGroupDTO, BudgetOverviewDTO} from "swagger-api";
+import {BudgetOverviewDTO} from "swagger-api";
 import {Card} from "antd";
 import React from "react";
 import text from "../../Texts";

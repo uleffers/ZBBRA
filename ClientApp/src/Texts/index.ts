@@ -9,6 +9,10 @@ const header = {
     visualizationsMenu: 'Dashboard'
 };
 
+
+const currencies = {
+    dkk: "kr.",
+}
 const transactionPage = {
     date: "Date",
     expense: "Expense",
@@ -17,7 +21,8 @@ const transactionPage = {
     category: "Category",
     account: "Account",
     title: "Transactions",
-    actions: "Edit"
+    actions: "Edit",
+    currencies,
 }
 
 const budgetPage = {
@@ -32,6 +37,7 @@ const budgetPage = {
     overview: "Overview",
     toBudget: "To budget",
     income: "Income",
+    currencies
 }
 
 const visualisationPage = {
@@ -41,7 +47,12 @@ const visualisationPage = {
     income: "Income",
     totalExpense: "Expenses",
     otherCategories: "Other categories",
-    
+    topCategories: "Top",
+    expand: "Show all",
+    collapse: "Collapse",
+    detailedGraph: "Detailed",
+    groupedGraph: "Grouped",
+    currencies
 }
 
 const months = {

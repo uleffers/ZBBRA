@@ -68,14 +68,14 @@ namespace ZBBRA.Business
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="HttpRequestException"></exception>
-        public async Task<List<BudgetGroupModel>> GetBudgetForMonth(int month, int year)
+        public async Task<List<BudgetViewCategoryGroupModel>> GetBudgetForMonth(int month, int year)
         {
-            VerifyMonthAndYear(month, year);
-
-            var nextMonth = month == 12 ? new DateTime(year + 1, 1, 1) : new DateTime(year, month + 1, 1);
-            var thisMonth = new DateTime(year, month, 1);
+            ManagerHelper.VerifyMonthAndYear(month, year);
+            var nextMonth = ManagerHelper.GetNextMonth(month, year);
+            var thisMonth = ManagerHelper.GetThisMonth(month, year);
+            
             var budgetEntrySpent = await _context.BudgetCategory
-                .Select(x => new BudgetEntrySpentModel
+                .Select(x => new BudgetViewCategoryModel
                 {
                     BudgetEntry = x.BudgetEntries.FirstOrDefault(be => be.Month == month && be.Year == year) ?? new BudgetEntry()
                     {
@@ -113,12 +113,12 @@ namespace ZBBRA.Business
                 .GroupBy(x => x.BudgetCategory.CategoryGroupId)
                 .OrderBy(x => x.First().BudgetCategory.CategoryGroup.CategoryGroupIndex);
 
-            var entriesInGroups = new List<BudgetGroupModel>();
+            var entriesInGroups = new List<BudgetViewCategoryGroupModel>();
 
             foreach (var group in entriesGrouped)
             {
                 var name = group.First().BudgetCategory?.CategoryGroup?.CategoryGroupName;
-                entriesInGroups.Add(new BudgetGroupModel()
+                entriesInGroups.Add(new BudgetViewCategoryGroupModel()
                 {
                     CategoryGroupName = name,
                     BudgetEntrySpentModels = group.OrderBy(x => x.BudgetCategory.CategoryIndex).ToList()
@@ -137,10 +137,9 @@ namespace ZBBRA.Business
         /// <exception cref="HttpRequestException"></exception>
         public async Task<BudgetOverviewModel> GetBudgetOverviewForMonth(int month, int year)
         {
-            VerifyMonthAndYear(month, year);
-            
-            var nextMonth = month == 12 ? new DateTime(year + 1, 1, 1) : new DateTime(year, month + 1, 1);
-            var thisMonth = new DateTime(year, month, 1);
+            ManagerHelper.VerifyMonthAndYear(month, year);
+            var nextMonth = ManagerHelper.GetNextMonth(month, year);
+            var thisMonth = ManagerHelper.GetThisMonth(month, year);
             
             var budgeted = await _context.BudgetEntry
                 .Where(be => (be.Month == month && be.Year == year))
@@ -171,19 +170,6 @@ namespace ZBBRA.Business
             };
         }
 
-        private static void VerifyMonthAndYear(int month, int year)
-        {
-            if (month < 1 || month > 12)
-            {
-                throw new HttpRequestException("Invalid month");
-            }
-            
-            if (year < 1000 || year > 9999)
-            {
-                throw new HttpRequestException("Invalid year");
-            }
-        }
-
         /// <summary>
         /// Initializes default budget for a given month
         /// </summary>
@@ -193,7 +179,7 @@ namespace ZBBRA.Business
         /// <exception cref="HttpRequestException"></exception>
         public async Task InitializeBudgetMonth(int month, int year)
         {
-            VerifyMonthAndYear(month, year);
+            ManagerHelper.VerifyMonthAndYear(month, year);
 
             var categoriesWithoutEntries = await _context.BudgetCategory
                 .AsNoTracking()

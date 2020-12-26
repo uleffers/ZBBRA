@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ZBBRA.Controllers.DTOs
 {
-    public class BudgetGroupDTO
+    public class BudgetViewCategoryGroupDTO
     {
         /// <summary>
         /// Name of the Category Group
@@ -32,6 +32,6 @@ namespace ZBBRA.Controllers.DTOs
         /// <summary>
         /// Entries in the group
         /// </summary>
-        public List<BudgetEntrySpentDTO> BudgetEntrySpentDTOs { get; set; } = new List<BudgetEntrySpentDTO>();
+        public List<BudgetViewCategoryDTO> BudgetEntrySpentDTOs { get; set; } = new List<BudgetViewCategoryDTO>();
     }
 }

@@ -1,8 +1,8 @@
 import { action, decorate, observable } from 'mobx';
 
-import { ErrorAndLoadingBindingStore } from '../ErrorAndLoadingBindingStore';
+import {BaseStore} from "../BaseStore";
 
-export class SimpleModalStore extends ErrorAndLoadingBindingStore {
+export class SimpleModalStore extends BaseStore {
     isShown: boolean = false;
     // code duplicate with other Modal Stores
     // duplication made on purpose due to TS problems with resolving generic types

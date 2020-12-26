@@ -1,9 +1,9 @@
 import { AxiosPromise } from 'axios';
 import { action, decorate, observable, runInAction } from 'mobx';
 
-import { ErrorAndLoadingBindingStore } from '../ErrorAndLoadingBindingStore';
+import {BaseStore} from "../BaseStore";
 
-export class ArrayFetchingStore<T> extends ErrorAndLoadingBindingStore {
+export class ArrayFetchingStore<T> extends BaseStore {
     payload: Array<T> = [];
 
     // code duplicate with ObjectFetchingStore
@@ -14,9 +14,7 @@ export class ArrayFetchingStore<T> extends ErrorAndLoadingBindingStore {
             AxiosPromise,
         loader: boolean = false,
         successCallback?: Function,
-        noResponseCallBack?: Function,
-        currentWindow?: Window) => {
-        this.bindLoadingAndErrorHandling(promise, loader, currentWindow);
+        noResponseCallBack?: Function) => {
         try {
             return await promise.then(result => {
                 runInAction(() => {

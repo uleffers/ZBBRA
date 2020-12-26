@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Database.Context;
 using Database.Models;
 using Microsoft.AspNetCore.Mvc;
 using ZBBRA.Business.Interfaces;
-using ZBBRA.Business.Models;
 using ZBBRA.Controllers.DTOs;
 
 namespace ZBBRA.Controllers
@@ -77,11 +75,11 @@ namespace ZBBRA.Controllers
         /// <param name="year"></param>
         /// <returns></returns>
         [HttpGet("budget/get")]
-        public async Task<List<BudgetGroupDTO>> GetBudgetForMonth(int month, int year)
+        public async Task<List<BudgetViewCategoryGroupDTO>> GetBudgetForMonth(int month, int year)
         {
             var budgetEntries = await _budgetManager.GetBudgetForMonth(month, year);
 
-            var budgetEntryDTOs = _mapper.Map<List<BudgetGroupDTO>>(budgetEntries);
+            var budgetEntryDTOs = _mapper.Map<List<BudgetViewCategoryGroupDTO>>(budgetEntries);
 
             return budgetEntryDTOs;
 

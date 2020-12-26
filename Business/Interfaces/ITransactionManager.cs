@@ -33,12 +33,6 @@ namespace ZBBRA.Business.Interfaces
         Task DeleteTransaction(Guid transactionId);
 
         /// <summary>
-        /// Generates 
-        /// </summary>
-        /// <returns></returns>
-        Task GenerateTestdata(int month, int year, int numberOfTransactions);
-        
-        /// <summary>
         /// Gets a list of transaction for a given month
         /// </summary>
         /// <param name="dateFrom"></param>

@@ -1,13 +1,12 @@
-import {BudgetEntrySpentDTO, BudgetGroupDTO, TransactionDTO} from "swagger-api";
+import {BudgetViewCategoryDTO} from "swagger-api";
 import text from "../../Texts";
 import React from "react";
-import {Button, Form, Input, Popconfirm, Table} from "antd";
-import EditableBudgetCell from "./EditableBudgetCell";
+import {Button, Form, Table} from "antd";
 import EditableTableCell from "../common/EditableTableCell";
-import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {CheckOutlined, CloseOutlined, EditOutlined} from "@ant-design/icons";
 
 export interface BudgetTableInnerProps {
-    budgetEntries: Array<BudgetEntrySpentDTO>;
+    budgetEntries: Array<BudgetViewCategoryDTO>;
     form:  any;
     isEditing: Function;
     onEdit: Function;
@@ -28,7 +27,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
             dataIndex: 'budgetCategoryName',
             key: 'budgetCategoryName' + tableName,
             width: widthCategoryName,
-            onCell: (record: BudgetEntrySpentDTO) => ({
+            onCell: (record: BudgetViewCategoryDTO) => ({
                 record,
                 inputType: 'text',
                 dataIndex: 'budgetCategoryName',
@@ -40,7 +39,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
             dataIndex: 'previousBudgetEntrySum',
             key: 'previousBudgetEntrySum' + tableName,
             width: widthNumbers,
-            onCell: (record: BudgetEntrySpentDTO) => ({
+            onCell: (record: BudgetViewCategoryDTO) => ({
                 record,
                 inputType: 'amount',
                 dataIndex: 'previousBudgetEntrySum',
@@ -53,7 +52,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
             dataIndex: 'budgetEntryAmount',
             key: 'budgetEntryAmount' + tableName,
             width: widthNumbers,
-            onCell: (record: BudgetEntrySpentDTO) => ({
+            onCell: (record: BudgetViewCategoryDTO) => ({
                 record,
                 inputType: 'amount',
                 dataIndex: 'budgetEntryAmount',
@@ -68,7 +67,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
             dataIndex: 'transactionSum',
             key: 'transactionSum' + tableName,
             width: widthNumbers,
-            onCell: (record: BudgetEntrySpentDTO) => ({
+            onCell: (record: BudgetViewCategoryDTO) => ({
                 record,
                 inputType: 'amount',
                 dataIndex: 'transactionSum',
@@ -81,7 +80,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
             dataIndex: 'remaining',
             key: 'remaining' + tableName,
             width: widthNumbers,
-            onCell: (record: BudgetEntrySpentDTO) => ({
+            onCell: (record: BudgetViewCategoryDTO) => ({
                 record,
                 inputType: 'amount',
                 dataIndex: 'remaining',
@@ -95,7 +94,7 @@ const BudgetTableInner: React.FC<BudgetTableInnerProps> = (props: BudgetTableInn
             dataIndex: 'operation',
             width: widthEdit,
             key: 'operation' + tableName,
-            render: (unUsed: any, record: BudgetEntrySpentDTO) => {
+            render: (unUsed: any, record: BudgetViewCategoryDTO) => {
                 const editable = props.isEditing(record.budgetCategoryId);
                 return editable ? (
                     <span>
