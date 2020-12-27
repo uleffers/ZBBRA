@@ -4,10 +4,9 @@ import text from "../../Texts";
 import CashflowCharts from "./CashflowCharts";
 import {CashflowOverviewDTO} from "swagger-api";
 
+
 export interface CashflowCardProps {
     CashflowOverview: CashflowOverviewDTO
-    Month: number
-    Year: number
 }
 
 const CashflowCard: React.FC<CashflowCardProps> = (props:CashflowCardProps) => {
@@ -48,16 +47,18 @@ const CashflowCard: React.FC<CashflowCardProps> = (props:CashflowCardProps) => {
     }
     
     return (
-        <Row align={"top"} gutter={8}>
-            <Col span={4}>
+        <Row align={"top"} style={{marginBottom:8}} gutter={8}>
+            <Col span={24}>
                 <Card title={texts.cashflowCard}>
+                    <Card.Grid style={{width:"15%", minHeight:450}} hoverable={false}>
                         <p><b>{texts.income}: </b>{props.CashflowOverview.incomeTotal} {texts.currencies.dkk}</p>
                         <p><b>{texts.totalExpense}: </b>{props.CashflowOverview.expenseTotal} {texts.currencies.dkk}</p>
                         <Divider orientation={"left"}>{texts.topCategories}</Divider>
                         {getTopCategories()}
+                    </Card.Grid>
+                    <CashflowCharts CashflowOverview={props.CashflowOverview}/>
                 </Card>
             </Col>
-            <CashflowCharts CashflowOverview={props.CashflowOverview}/>
         </Row>
             
     );

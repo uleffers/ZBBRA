@@ -30,6 +30,14 @@ namespace ZBBRA.Controllers.MappingProfiles
                 .ForMember(des => des.BudgetCategoryName, act => act.MapFrom(src => src.Key))
                 .ForMember(des => des.Spent, act => act.MapFrom(src => src.Value));
 
+            CreateMap<BalanceHistoryModel, BalanceHistoryDTO>()
+                .ForMember(des => des.Month, act => act.MapFrom(src => src.Month))
+                .ForMember(des => des.AccountBalances, act => act.MapFrom(src => src.AccountBalances));
+
+            CreateMap<AccountBalanceModel, AccountBalanceDTO>()
+                .ForMember(des => des.AccountBalance, act => act.MapFrom(src => src.AccountBalance))
+                .ForMember(des => des.AccountName, act => act.MapFrom(src => src.AccountName));
+
         }
     }
 }

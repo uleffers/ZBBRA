@@ -47,11 +47,14 @@ const visualisationPage = {
     income: "Income",
     totalExpense: "Expenses",
     otherCategories: "Other categories",
-    topCategories: "Top",
+    topCategories: "Categories",
     expand: "Show all",
     collapse: "Collapse",
     detailedGraph: "Detailed",
     groupedGraph: "Grouped",
+    networthTitle: "Networth",
+    accountBalances: "Account Balances",
+    total: "Total",
     currencies
 }
 

@@ -37,11 +37,13 @@ namespace ZBBRA.Business
             {
                 throw new HttpRequestException("Account is missing on transaction.");
             }
-
-            if (transaction.AccountId != null
-                && !_context.Account.Any(x => x.AccountId == transaction.AccountId))
+            
+            if (transaction.ExpenseAmount != 0 
+                && (transaction.BudgetCategoryId == Guid.Empty
+                    || transaction.BudgetCategoryId == null
+                    || !_context.BudgetCategory.Any(x => x.BudgetCategoryId == transaction.BudgetCategoryId)))
             {
-                throw new HttpRequestException("Account not recognised.");
+                throw new HttpRequestException("BudgetCategory is missing on expense transaction.");
             }
 
             _context.Transaction.Add(transaction);
@@ -60,6 +62,14 @@ namespace ZBBRA.Business
                 || !await _context.Transaction.AnyAsync(x => x.TransactionId == transaction.TransactionId))
             {
                 throw new HttpRequestException("Transaction could not be found in DB.");
+            }
+            
+            if (transaction.ExpenseAmount != 0 
+                && (transaction.BudgetCategoryId == Guid.Empty
+                    || transaction.BudgetCategoryId == null
+                    || !_context.BudgetCategory.Any(x => x.BudgetCategoryId == transaction.BudgetCategoryId)))
+            {
+                throw new HttpRequestException("BudgetCategory is missing on expense transaction.");
             }
 
             var persistedTransaction = await _context.Transaction

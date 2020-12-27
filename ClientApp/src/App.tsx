@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Col, Layout, Menu, Row} from 'antd';
 import styles from './App.module.less';
 import Footer from "./components/footer/Footer";
@@ -26,7 +26,7 @@ const App = () => {
                             <h1 style={{color: "#336600"}}>{text.header.headerText}</h1>
                         </Col>
                         <Col span={5}>
-                            <Menu defaultSelectedKeys={['1']} mode={'horizontal'}>
+                            <Menu mode={'horizontal'}>
                                 <Menu.Item key="1">
                                     <Link to="/budget">
                                         <span>{text.header.budgetTableMenu}</span>

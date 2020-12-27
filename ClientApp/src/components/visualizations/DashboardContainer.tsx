@@ -1,23 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import {DashboardStore} from "../../stores/DashboardStore";
 import CashflowCard from "./CashflowCard";
-import text from "../../Texts";
 import {Col, InputNumber, Row, Select} from "antd";
 import {useStore} from "../../Hooks/stores";
 import {MONTH_INT_MAP} from "../../Utils/MonthMapper";
+import {observer} from "mobx-react-lite";
+import NetworthChart from "./NetworthChart";
 
-const DashboardContainer: React.FC = () => {
+const DashboardContainer: React.FC = observer(() => {
     const [monthState, setMonthState] = useState(0);
     const [yearState, setYearState] = useState(0);
 
-    const { Option } = Select;
     const store: DashboardStore = useStore(DashboardStore);
+    const { Option } = Select;
 
     useEffect(() => {
         let d = new Date();
+        store.getCashflow(d.getMonth() + 1, d.getFullYear());
+        store.getAccountBalances();
         setYearState(new Date().getFullYear());
         setMonthState(new Date().getMonth() + 1)
-        store.getCashflow(monthState === 0 ? new Date().getMonth() + 1 : monthState, yearState === 0 ? new Date().getFullYear() : yearState);
     }, []);
     
     const onMonthChange = (e: any) => {
@@ -65,11 +67,12 @@ const DashboardContainer: React.FC = () => {
                             />
                         </Col>
                     </Row>
-                    <CashflowCard CashflowOverview={store.payload} Month={monthState} Year={yearState}/>
+                    <CashflowCard CashflowOverview={store.payload} />
+                    <NetworthChart BalanceHistory={store.balanceHistory} />
                 </>
             )
             : <React.Fragment />
     );
-};
+});
 
 export default DashboardContainer;

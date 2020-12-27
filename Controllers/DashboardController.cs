@@ -46,6 +46,18 @@ namespace ZBBRA.Controllers
             var overviewModel = await _dashboardManager.GetCashflowOverview(month, year);
             var overviewDTO = _mapper.Map<CashflowOverviewDTO>(overviewModel);
             return overviewDTO;
-        } 
+        }
+
+        /// <summary>
+        /// Gets balance history for each account
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("dashboard/getbalancehistory")]
+        public async Task<List<BalanceHistoryDTO>> GetBalanceHistory()
+        {
+            var balanceHistoryModels = await _dashboardManager.GetBalanceHistory();
+            var balanceHistoryDTOs = _mapper.Map<List<BalanceHistoryDTO>>(balanceHistoryModels);
+            return balanceHistoryDTOs;
+        }
     }
 }
