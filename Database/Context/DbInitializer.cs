@@ -8,8 +8,6 @@ namespace Database.Context
     {
         public static void Initialize(ZbbraDBContext context)
         {
-            context.Database.EnsureCreated();
-
             if (context.CategoryGroup.Any() || context.BudgetCategory.Any())
             {
                 return;

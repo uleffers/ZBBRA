@@ -1,26 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Database.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Database.Context
 {
-    public partial class ZbbraDBContext : DbContext
+    public class ZbbraDBContext : DbContext
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
         public ZbbraDBContext(DbContextOptions<ZbbraDBContext> options) : base(options)
         {
-            try
-            {
-                _httpContextAccessor = this.GetService<IHttpContextAccessor>();
-            }
-            catch
-            {
-                //We do nothing, it's optional dependency
-            }
         }
 
         public DbSet<Account> Account { get; set; }
